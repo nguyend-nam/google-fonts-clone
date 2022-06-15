@@ -1,28 +1,103 @@
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
 import cx from 'classnames'
+import { Font } from 'types/schema'
 
 interface CardProps {
-  title: string
+  data: Font
+  onClick?: (font: Font) => void
+  fontSize?: number
+}
+
+function fontDataToCSS(data: Font) {
+  const { subsets, family, variants, files } = data
+  const weight = variants.includes('regular') ? 'regular' : variants[0]
+  const url = files[weight]
+
+  return `
+  @font-face {
+    font-family: '${family} script=${
+    subsets.includes('latin') ? 'latin' : subsets[0]
+  } rev=1';
+    font-style: normal;
+    font-weight: ${weight};
+    font-display: block;
+    src: url(${url}) format('woff2');
+  }
+  `
+}
+
+function fontDataToInlineStyle(data: Font, fontSize: number) {
+  const { subsets, family, variants } = data
+  const props: string[] = []
+  props.push(
+    `"${family} script=${
+      subsets.includes('latin') ? 'latin' : subsets[0]
+    } rev=1"`
+  )
+  props.push(
+    `font-weight: ${variants.includes('regular') ? '400' : variants[0]}`
+  )
+  props.push('font-style: normal')
+  props.push('font-stretch: normal')
+  props.push('line-height: initial')
+  props.push(`font-size: ${fontSize}px`)
+
+  return `font-family: ${props.join('; ')}`
 }
 
 export function FontCard(props: CardProps) {
-  const { title } = props
-  const divStyle = {
-    fontFamily: 'Nuosu SIL script=latin rev=1',
-    fontWeight: 400,
-    fontStyle: 'normal',
-    fontStretch: 'normal',
-    lineHeight: 'initial',
-    fontSize: '40px',
-  }
+  const { data, onClick, fontSize = 40 } = props
+  const fontRef = useRef<HTMLDivElement>(null)
+  const variantLen = data.variants.length
+
+  useEffect(() => {
+    if (fontRef.current) {
+      fontRef.current.setAttribute(
+        'style',
+        fontDataToInlineStyle(data, fontSize)
+      )
+    }
+  }, [data, fontSize])
+
+  useEffect(() => {
+    const style = document.createElement('style')
+    style.id = `google-font-${data.family.replace(/\s+/g, '-').toLowerCase()}`
+    style.innerHTML = fontDataToCSS(data)
+
+    document.head.appendChild(style)
+
+    return () => {
+      document.head.removeChild(style)
+    }
+  }, [data])
+
   return (
     <div
-      style={divStyle}
-      className={cx(
-        'border border-1 border-gray-300 rounded-lg max-w-md ease-in-out duration-150 text-left hover:-translate-y-0.5 hover:shadow-md'
-      )}
+      className={cx('border rounded p-4')}
+      tabIndex={1}
+      role="button"
+      onClick={() => {
+        if (onClick) {
+          onClick(data)
+        }
+      }}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' && onClick) {
+          e.preventDefault()
+          onClick(data)
+        }
+      }}
     >
-      {title}
+      <div className="flex items-center justify-between mb-8">
+        <h4 className="text-lg">{data.family}</h4>
+        <span className="text-xs">
+          {data.variants.length} {`style${variantLen > 1 ? 's' : ''}`}
+        </span>
+      </div>
+
+      <div className="mb-17" ref={fontRef}>
+        Almost before we knew it, we had left the ground.
+      </div>
     </div>
   )
 }

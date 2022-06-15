@@ -9,10 +9,10 @@ import { Button } from '../components/Button'
 import { DropdownButton } from '../components/DropdownButton'
 import { DropdownButtonString } from '../components/DropdownButtonString'
 import { FontCard } from '../components/FontCard'
-import cx from 'classnames'
+import { Font } from 'types/schema'
 
 const Home: NextPage = () => {
-  const [fonts, setFonts] = useState([])
+  const [fonts, setFonts] = useState<Font[]>([])
   const [sideBar, toggleSideBar] = useState(false)
   const [preview, setPreview] = useState('Sentence')
   const [fontSize, setFontSize] = useState(40)
@@ -26,7 +26,7 @@ const Home: NextPage = () => {
       const response = await fetch(
         'https://www.googleapis.com/webfonts/v1/webfonts?key=AIzaSyDUIf6phYGeXaLPM3u0ffq1p6Q7B9nmpr0'
       )
-      const data = await response.json()
+      const data = (await response.json()) as { items: Font[] }
       const fontsData = data.items
       setFonts(fontsData)
     }
@@ -126,17 +126,19 @@ const Home: NextPage = () => {
             <FontAwesomeIcon icon={faRedo} />
           </button>
         </div>
+        <div className="container mx-auto grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {fonts.slice(0, 20).map((font) => (
+            <FontCard
+              key={font.family}
+              data={font}
+              fontSize={fontSize}
+              onClick={(font) => {
+                alert(`You clicked on "${font.family}"`)
+              }}
+            />
+          ))}
+        </div>
       </div>
-      <aside
-        className={cx('h-screen bg-gray-100 ease-in-out duration-300', {
-          'w-72': sideBar,
-          'w-0 opacity-0': !sideBar,
-        })}
-      >
-        {fonts.map((font, index) => (
-          <FontCard key={index} title={font.family} />
-        ))}
-      </aside>
     </div>
   )
 }
