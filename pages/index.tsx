@@ -9,29 +9,19 @@ import { Button } from '../components/Button'
 import { DropdownButton } from '../components/DropdownButton'
 import { DropdownButtonString } from '../components/DropdownButtonString'
 import { FontCard } from '../components/FontCard'
-import { Font } from 'types/schema'
+import { useRouter } from 'next/router'
+import useFetchFonts from 'hooks/fetchFonts'
 
 const Home: NextPage = () => {
-  const [fonts, setFonts] = useState<Font[]>([])
+  const { data } = useFetchFonts()
   const [sideBar, toggleSideBar] = useState(false)
   const [preview, setPreview] = useState('Sentence')
   const [fontSize, setFontSize] = useState(40)
+  const { push } = useRouter()
 
   const openSideBar = () => {
     toggleSideBar(!sideBar)
   }
-
-  useEffect(() => {
-    async function fetchData() {
-      const response = await fetch(
-        'https://www.googleapis.com/webfonts/v1/webfonts?key=AIzaSyDUIf6phYGeXaLPM3u0ffq1p6Q7B9nmpr0'
-      )
-      const data = (await response.json()) as { items: Font[] }
-      const fontsData = data.items
-      setFonts(fontsData)
-    }
-    fetchData()
-  }, [])
 
   useEffect(() => {
     const style = document.createElement('style')
@@ -127,13 +117,13 @@ const Home: NextPage = () => {
           </button>
         </div>
         <div className="container mx-auto grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {fonts.slice(0, 20).map((font) => (
+          {data?.slice(0, 20).map((font) => (
             <FontCard
               key={font.family}
               data={font}
               fontSize={fontSize}
               onClick={(font) => {
-                alert(`You clicked on "${font.family}"`)
+                push(`/speciment/${font.family}`)
               }}
             />
           ))}
