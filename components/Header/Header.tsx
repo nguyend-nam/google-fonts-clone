@@ -14,7 +14,7 @@ export function Header(props: HeaderProps) {
     <header className="grow p-2 px-14 border border-t-0 border-x-0 border-b-1 border-b-gray-300 flex justify-between items-center">
       <button className="flex items-center">
         <Image
-          src="/../public/Google-Fonts-Logo.png"
+          src="/Google-Fonts-Logo.png"
           alt="Google fonts logo"
           width={45}
           height={25}

@@ -13,6 +13,7 @@ function fontDataToCSS(data: Font) {
   const { subsets, family, variants, files } = data
   const weight = variants.includes('regular') ? 'regular' : variants[0]
   const url = files[weight]
+  const surl = url.slice(0, 4) + 's' + url.slice(4)
 
   return `
   @font-face {
@@ -22,7 +23,7 @@ function fontDataToCSS(data: Font) {
     font-style: normal;
     font-weight: ${weight};
     font-display: block;
-    src: url(${url}) format('woff2');
+    src: url(${surl}) format('woff2');
   }
   `
 }
