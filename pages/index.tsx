@@ -1,74 +1,97 @@
-import React, { useEffect, useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import type { NextPage } from 'next'
-import Image from 'next/image'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSearch, faRedo } from '@fortawesome/free-solid-svg-icons'
-import { PREVIEW } from '../constants/preview-options'
-import { FONT_SIZE } from '../constants/fontsize-options'
-import { Button } from '../components/Button'
 import { DropdownButton } from '../components/DropdownButton'
 import { DropdownButtonString } from '../components/DropdownButtonString'
 import { FontCard } from '../components/FontCard'
 import { useRouter } from 'next/router'
 import useFetchFonts from 'hooks/fetchFonts'
+import { Header } from '../components/Header'
+import { SideBar } from 'components/SideBar'
+import { useSideBarContext } from 'context/sidebarcontext'
+import { useStylesListContext } from 'context/styleslistcontext'
+import { Font } from 'types/schema'
+import { PREVIEW } from '../constants/preview-options'
+import { FONT_SIZE } from '../constants/fontsize-options'
+import { CATEGORIES } from 'constants/category'
+import { LANGUAGES } from 'constants/language'
+
+function formatText(str: string) {
+  let ans = str.replace(/-/g, ' ')
+  const arr = ans.split(' ')
+
+  for (let i = 0; i < arr.length; i++) {
+    if (arr[i] === 'ext') arr[i] = 'extended'
+    arr[i] = arr[i].charAt(0).toUpperCase() + arr[i].slice(1)
+  }
+  const newstr = arr.join(' ')
+  return newstr
+}
 
 const Home: NextPage = () => {
   const { data } = useFetchFonts()
-  const [sideBar, toggleSideBar] = useState(false)
-  const [preview, setPreview] = useState('Sentence')
+  const { sideBar, toggleSideBar } = useSideBarContext()
+  const { stylesList, removeStyle } = useStylesListContext()
+  const [keyWord, setKeyWord] = useState('')
+  const [previewType, setPreviewType] = useState('Sentence')
+  const [preview, setPreview] = useState(
+    'Almost before we knew it, we had left the ground.'
+  )
   const [fontSize, setFontSize] = useState(40)
-  const { push } = useRouter()
+  const [cateList, handleSelectCate] = useState<boolean[]>(
+    new Array(CATEGORIES.length).fill(true)
+  )
+  const [language, setLanguage] = useState('all-languages')
 
-  const openSideBar = () => {
+  const handleOnChangeCheckBox = (position: number) => {
+    const updatedCheckedState = cateList.map((item: boolean, index: number) =>
+      index === position ? !item : item
+    )
+    handleSelectCate(updatedCheckedState)
+  }
+
+  const handleRemoveStyle = (index: number) => {
+    removeStyle(index)
+  }
+
+  const renderFontCard = useMemo(() => {
+    const fontCard: Font[] = []
+
+    data?.slice(0, 50).map((font) => {
+      const fontFam = font.family
+      if (fontFam.includes(keyWord)) {
+        if (cateList[CATEGORIES.indexOf(font.category)]) {
+          if (language === 'all-languages') fontCard.push(font)
+          else if (font.subsets.includes(language)) fontCard.push(font)
+        }
+      }
+    })
+    return fontCard
+  }, [data, keyWord, cateList, language])
+
+  const setPreviewText = (val: string) => {
+    if (val === '')
+      setPreview('Almost before we knew it, we had left the ground.')
+    else setPreview(val)
+  }
+  const setSideBar = () => {
     toggleSideBar(!sideBar)
   }
 
-  useEffect(() => {
-    const style = document.createElement('style')
-    style.innerHTML = `
-    @font-face {
-      font-family: 'Nuosu SIL script=latin rev=1';
-      font-style: normal;
-      font-weight: 400;
-      font-display: block;
-      src: url(https://fonts.gstatic.com/l/font?kit=8vIK7wM3wmRn_kc4uAjeEWxdO_3C7D6IQ8ukaiI9CMO9OyN_kBHy6Q6lbi4&skey=d5abc6cd0675e9e8&v=v1) format('woff2');
-    }
-    `
-
-    document.head.appendChild(style)
-
-    return () => {
-      document.head.removeChild(style)
-    }
-  }, [])
+  const { push } = useRouter()
 
   return (
     <div className="flex items-start">
       <div className="grow">
-        <header className="grow p-2 px-14 border border-t-0 border-x-0 border-b-1 border-b-gray-300 flex justify-between items-center">
-          <button className="flex items-center">
-            <Image
-              src="/../public/Google-Fonts-Logo.png"
-              alt="Google fonts logo"
-              width={45}
-              height={25}
-            />
-            <h1 className="text-gray-600 font-light text-2xl ml-2">
-              <span className="font-medium">Google</span> Fonts
-            </h1>
-          </button>
-          <nav>
-            <Button icon="theme" className="mr-7 rotate-22.5" />
-            <Button
-              icon="family"
-              onClick={openSideBar}
-              className={sideBar ? 'text-blue-500' : 'text-gray-500'}
-            />
-          </nav>
-        </header>
+        <Header
+          sideBar={sideBar}
+          openSideBar={setSideBar}
+          hasStyle={stylesList.length !== 0}
+        />
 
-        <div className="mx-16 my-4 flex divide-x divide-gray-300 border border-gray-300 rounded-full font-light">
-          <div className="w-3/12 flex items-center pl-4">
+        <div className="sticky top-0 bg-white mx-14 my-4 flex divide-x divide-gray-300 border border-gray-300 rounded-full font-light">
+          <div className="w-1/2 lg:w-3/12 flex items-center pl-4">
             <label htmlFor="searchInput" className="text-gray-600">
               <FontAwesomeIcon icon={faSearch} />
             </label>
@@ -78,20 +101,22 @@ const Home: NextPage = () => {
               autoComplete="off"
               autoCorrect="off"
               className="outline-none grow p-4 ml-1 placeholder:text-gray-500 focus:placeholder:text-blue-600"
+              onChange={({ target: { value: val } }) => setKeyWord(val)}
             />
           </div>
-          <div className="w-1/3 grow flex items-center pl-2.5 pr-4">
+          <div className="w-1/3 grow hidden lg:flex items-center pl-2.5 pr-4">
             <DropdownButtonString
-              displayValue={preview}
+              displayValue={previewType}
               options={PREVIEW}
-              optionsClick={(val: string) => setPreview(val)}
+              optionsClick={(val: string) => setPreviewType(val)}
             />
             <input
               id="previewInput"
-              placeholder={`Type ${preview}`}
+              placeholder={`Type ${previewType}`}
               autoComplete="off"
               autoCorrect="off"
               className="grow outline-none p-4 placeholder:text-gray-500 focus:placeholder:text-blue-600"
+              onChange={({ target: { value: val } }) => setPreviewText(val)}
             />
           </div>
           <div className="w-3/12 flex grow items-center pl-2.5 pr-4">
@@ -112,23 +137,82 @@ const Home: NextPage = () => {
               }
             />
           </div>
-          <button className="w-max p-2.5 px-4 text-gray-600">
+          <button
+            className="w-max p-2.5 px-4 text-gray-600"
+            onClick={() => {
+              setKeyWord('')
+              setPreviewType('Sentence')
+              setFontSize(40)
+            }}
+          >
             <FontAwesomeIcon icon={faRedo} />
           </button>
         </div>
-        <div className="container mx-auto grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {data?.slice(0, 20).map((font) => (
-            <FontCard
-              key={font.family}
-              data={font}
-              fontSize={fontSize}
-              onClick={(font) => {
-                push(`/speciment/${font.family}`)
-              }}
-            />
+
+        <div className="p-2 px-14 flex">
+          <h3 className="mr-4 text-blue-600">Categories</h3>
+          {CATEGORIES.map((name, index) => (
+            <div key={index} className="flex items-center mr-4">
+              <input
+                className="mr-1"
+                type="checkbox"
+                id={`checkbox-${index}`}
+                name={name}
+                value={name}
+                checked={cateList[index]}
+                onChange={() => handleOnChangeCheckBox(index)}
+              />
+              <label htmlFor={`checkbox-${index}`}>{formatText(name)}</label>
+            </div>
+          ))}
+        </div>
+
+        <div className="p-2 pb-10 px-14 flex">
+          <h3 className="mr-4 text-blue-600">Languages</h3>
+          <select
+            defaultValue={language}
+            onChange={({ target: { value: val } }) => setLanguage(val)}
+          >
+            {LANGUAGES.map((name, index) => (
+              <option
+                key={index}
+                className="flex items-center mr-4"
+                id={`checkbox-${index}`}
+                value={name}
+              >
+                {formatText(name)}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div className="px-14 mb-2 text-xs text-gray-500">
+          {renderFontCard.length} families
+        </div>
+
+        <div className="px-14 mx-auto grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {renderFontCard.map((font) => (
+            <div key={font.family}>
+              {font.family.includes(keyWord) ? (
+                <FontCard
+                  key={font.family}
+                  data={font}
+                  previewText={preview}
+                  fontSize={fontSize}
+                  onClick={(font) => {
+                    push(`/speciment/${font.family}`)
+                  }}
+                />
+              ) : null}
+            </div>
           ))}
         </div>
       </div>
+      <SideBar
+        sideBar={sideBar}
+        stylesList={stylesList}
+        handleRemoveStyle={handleRemoveStyle}
+      />
     </div>
   )
 }

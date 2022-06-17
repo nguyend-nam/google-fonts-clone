@@ -5,6 +5,7 @@ import { Font } from 'types/schema'
 interface CardProps {
   data: Font
   onClick?: (font: Font) => void
+  previewText: string
   fontSize?: number
 }
 
@@ -46,7 +47,7 @@ function fontDataToInlineStyle(data: Font, fontSize: number) {
 }
 
 export function FontCard(props: CardProps) {
-  const { data, onClick, fontSize = 40 } = props
+  const { data, onClick, previewText, fontSize = 40 } = props
   const fontRef = useRef<HTMLDivElement>(null)
   const variantLen = data.variants.length
 
@@ -73,7 +74,7 @@ export function FontCard(props: CardProps) {
 
   return (
     <div
-      className={cx('border rounded p-4')}
+      className={cx('border rounded p-4 h-full')}
       tabIndex={1}
       role="button"
       onClick={() => {
@@ -96,7 +97,7 @@ export function FontCard(props: CardProps) {
       </div>
 
       <div className="mb-17" ref={fontRef}>
-        Almost before we knew it, we had left the ground.
+        {previewText}
       </div>
     </div>
   )
