@@ -57,9 +57,8 @@ const Home: NextPage = () => {
 
   const renderFontCard = useMemo(() => {
     const fontCard: Font[] = []
-
     data?.slice(0, 50).map((font) => {
-      const fontFam = font.family
+      const fontFam = font.family.toLowerCase()
       if (fontFam.includes(keyWord)) {
         if (cateList[CATEGORIES.indexOf(font.category)]) {
           if (language === 'all-languages') fontCard.push(font)

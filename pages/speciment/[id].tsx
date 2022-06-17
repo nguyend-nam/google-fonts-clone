@@ -103,7 +103,7 @@ const FontDetailPage = () => {
   }
 
   return (
-    <div className="flex">
+    <div className="flex w-screen">
       <div className="grow">
         <Header
           sideBar={sideBar}

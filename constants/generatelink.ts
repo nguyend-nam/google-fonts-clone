@@ -38,7 +38,6 @@ export function generatelink(stylesList: string[]) {
     if (italFlag && !wghtFlag) {
       ret += 'ital@'
       stylesList.forEach((style) => {
-        console.log(family)
         if (style.split(' ').join('+').includes(family)) {
           if (style.includes('Italic')) ret += '1'
           else ret += '0'
@@ -49,7 +48,6 @@ export function generatelink(stylesList: string[]) {
     } else if (!italFlag && wghtFlag) {
       ret += 'wght@'
       stylesList.forEach((style) => {
-        console.log(family)
         if (style.split(' ').join('+').includes(family)) {
           if (style.includes('100')) ret += '100'
           else if (style.includes('200')) ret += '200'
@@ -67,7 +65,6 @@ export function generatelink(stylesList: string[]) {
     } else if (italFlag && wghtFlag) {
       ret += 'ital,wght@'
       stylesList.forEach((style) => {
-        console.log(family)
         if (style.split(' ').join('+').includes(family)) {
           if (style.includes('Italic')) ret += '1'
           else ret += '0'

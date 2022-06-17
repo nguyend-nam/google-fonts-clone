@@ -14,14 +14,14 @@ export function SideBar(props: SideBarProps) {
   return (
     <aside
       className={cx(
-        'sticky top-0 h-screen bg-white ease-in-out duration-300 flex flex-col shadow-xl',
+        'sticky top-0 h-screen bg-white ease-in-out duration-300 shadow-xl',
         {
           'min-w-[320px] w-[320px] block': sideBar,
           'w-0 hidden': !sideBar,
         }
       )}
     >
-      <h3 className="bg-white h-[65px] flex items-center px-4 border-b border-gray-300">
+      <h3 className="bg-white h-[65px] sticky top-0 flex items-center px-4 border-b border-gray-300">
         Selected families
       </h3>
       <div className="p-4 max-h-80 overflow-auto">
