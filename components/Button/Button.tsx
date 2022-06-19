@@ -25,7 +25,7 @@ export function Button(props: ButtonProps) {
       ) : icon === 'family' ? (
         <FontAwesomeIcon icon={faMicrosoft} />
       ) : (
-        'Button'
+        ''
       )}
     </button>
   )

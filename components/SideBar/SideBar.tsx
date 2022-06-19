@@ -71,7 +71,7 @@ export function SideBar(props: SideBarProps) {
                 }
               )}
             >
-              {element}
+              {element.split(' ').slice(0, -1).join(' ')}
             </button>
           )
         })}
@@ -87,7 +87,7 @@ export function SideBar(props: SideBarProps) {
           To embed a font, copy the code into the{' '}
           <code className="text-xs">&lt;head&gt;</code> of your html
         </p>
-        <code className="text-sm break-all">
+        <code className="break-all">
           <pre className="whitespace-pre-wrap text-xs bg-gray-100 p-2 mb-8">
             &lt;link rel=&quot;preconnect&quot;
             href=&quot;https://fonts.googleapis.com&quot;&gt;
@@ -101,10 +101,12 @@ export function SideBar(props: SideBarProps) {
           </pre>
         </code>
         <p className="text-sm mb-4">CSS rules to specify families</p>
-        <code className="text-sm break-all">
-          <pre className="whitespace-pre-wrap text-xs bg-gray-100 p-2">
+        <code className="break-all">
+          <pre className="whitespace-pre-wrap text-xs bg-gray-100 p-2 mb-8">
             {generatecss(stylesList.sort(sortStylesList)).map((family) => (
-              <pre key={family}>font-family: &lsquo;{family}&rsquo;;</pre>
+              <pre className="whitespace-pre-wrap break-all" key={family}>
+                font-family: {family};
+              </pre>
             ))}
           </pre>
         </code>

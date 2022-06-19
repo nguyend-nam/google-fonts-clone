@@ -10,6 +10,9 @@ interface HeaderProps {
 
 export function Header(props: HeaderProps) {
   const { sideBar, openSideBar, hasStyle } = props
+  const logoStyle = {
+    fontFamily: 'Futura',
+  }
   return (
     <header className="grow p-2 px-14 border border-t-0 border-x-0 border-b-1 border-b-gray-300 flex justify-between items-center">
       <button className="flex items-center">
@@ -20,11 +23,13 @@ export function Header(props: HeaderProps) {
           height={25}
         />
         <h1 className="text-gray-600 font-light text-2xl ml-2">
-          <span className="font-medium">Google</span> Fonts
+          <span className="font-medium" style={logoStyle}>
+            Google
+          </span>{' '}
+          Fonts
         </h1>
       </button>
       <nav className="relative">
-        <Button icon="theme" className="mr-7 rotate-22.5" />
         <Button
           icon="family"
           onClick={openSideBar}

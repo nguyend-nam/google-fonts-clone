@@ -4,7 +4,7 @@ export function generatelink(stylesList: string[]) {
   let italFlag = false
   let ansArr: string[] = []
   stylesList.forEach((style) => {
-    ans = style.split(' ').slice(0, -3).join('+')
+    ans = style.split(' ').slice(0, -4).join('+')
     if (!ansArr.includes(ans)) ansArr.push(ans)
   })
   let ret = ''
@@ -28,7 +28,7 @@ export function generatelink(stylesList: string[]) {
           )
             wghtFlag = true
           if (style.includes('Italic') && !italFlag) italFlag = true
-          ans = style.split(' ').slice(0, -3).join('+')
+          ans = style.split(' ').slice(0, -4).join('+')
           if (!ansArr.includes(ans)) ansArr.push(ans)
         }
       })

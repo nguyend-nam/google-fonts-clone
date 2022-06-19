@@ -2,7 +2,12 @@ export function generatecss(stylesList: string[]) {
   let ans = ''
   let ansArr: string[] = []
   stylesList.forEach((style) => {
-    ans = style.split(' ').slice(0, -3).join(' ')
+    ans =
+      `'` +
+      style.split(' ').slice(0, -4).join(' ') +
+      `'` +
+      ', ' +
+      style.split(' ')[style.split(' ').length - 1]
     if (!ansArr.includes(ans)) ansArr.push(ans)
   })
 

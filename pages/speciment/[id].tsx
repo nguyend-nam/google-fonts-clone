@@ -8,6 +8,7 @@ import { StyleCard } from 'components/StyleCard'
 import { Header } from 'components/Header'
 import { useSideBarContext } from 'context/sidebarcontext'
 import { useStylesListContext } from 'context/styleslistcontext'
+import { usePreviewTextContext } from 'context/previewtextcontext'
 import { SideBar } from 'components/SideBar'
 
 function fontDataToCSS(data: Font) {
@@ -35,23 +36,8 @@ const FontDetailPage = () => {
   const fontDetails = data?.find(({ family }) => family === query.id)
   const { sideBar, toggleSideBar } = useSideBarContext()
   const { stylesList, addStyle, removeStyle } = useStylesListContext()
+  const { previewText, setPreviewText } = usePreviewTextContext()
   const [fontSize, setFontSize] = useState(64)
-  const [previewText, setPreviewText] = useState(
-    'Almost before we knew it, we had left the ground.'
-  )
-
-  let variantStyles = []
-  const openSideBar = () => {
-    toggleSideBar(sideBar)
-  }
-
-  const handleAddStyle = (newStyle: string) => {
-    addStyle(newStyle)
-  }
-
-  const handleRemoveStyle = (index: number) => {
-    removeStyle(index)
-  }
 
   if (!fontDetails) {
     return <div>Loading...</div>
@@ -64,6 +50,8 @@ const FontDetailPage = () => {
   style.innerHTML = fontDataToCSS(fontDetails)
 
   document.head.appendChild(style)
+
+  let variantStyles = []
 
   const { subsets, family } = fontDetails
   for (let i = 0; i < fontDetails.variants.length; i++) {
@@ -81,6 +69,7 @@ const FontDetailPage = () => {
         fontStretch: `normal`,
         lineHeight: `initial`,
         fontSize: fontSize,
+        fontCategory: fontDetails.category,
       }
       variantStyles.push(props)
     } else {
@@ -97,6 +86,7 @@ const FontDetailPage = () => {
         fontStretch: `normal`,
         lineHeight: `initial`,
         fontSize: fontSize,
+        fontCategory: fontDetails.category,
       }
       variantStyles.push(props)
     }
@@ -107,7 +97,7 @@ const FontDetailPage = () => {
       <div className="grow">
         <Header
           sideBar={sideBar}
-          openSideBar={openSideBar}
+          openSideBar={() => toggleSideBar(!sideBar)}
           hasStyle={stylesList.length !== 0}
         />
         <div className="p-14 pt-8">
@@ -160,7 +150,7 @@ const FontDetailPage = () => {
                   variant={variant}
                   previewText={previewText}
                   onClick={() =>
-                    handleAddStyle(
+                    addStyle(
                       variant.fontFamily
                         .split(' ')
                         .slice(0, -2)
@@ -190,7 +180,9 @@ const FontDetailPage = () => {
                         (variant.fontStyle === 'italic'
                           ? variant.fontStyle[0].toUpperCase() +
                             variant.fontStyle.slice(1)
-                          : '')
+                          : '') +
+                        ' ' +
+                        variant.fontCategory
                     )
                   }
                   onChange={() => setPreviewText}
@@ -203,7 +195,7 @@ const FontDetailPage = () => {
       <SideBar
         sideBar={sideBar}
         stylesList={stylesList}
-        handleRemoveStyle={handleRemoveStyle}
+        handleRemoveStyle={removeStyle}
       />
     </div>
   )

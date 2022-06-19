@@ -11,6 +11,7 @@ import { Header } from '../components/Header'
 import { SideBar } from 'components/SideBar'
 import { useSideBarContext } from 'context/sidebarcontext'
 import { useStylesListContext } from 'context/styleslistcontext'
+import { usePreviewTextContext } from 'context/previewtextcontext'
 import { Font } from 'types/schema'
 import { PREVIEW } from '../constants/preview-options'
 import { FONT_SIZE } from '../constants/fontsize-options'
@@ -33,11 +34,9 @@ const Home: NextPage = () => {
   const { data } = useFetchFonts()
   const { sideBar, toggleSideBar } = useSideBarContext()
   const { stylesList, removeStyle } = useStylesListContext()
+  const { previewText, setPreviewText } = usePreviewTextContext()
   const [keyWord, setKeyWord] = useState('')
   const [previewType, setPreviewType] = useState('Sentence')
-  const [preview, setPreview] = useState(
-    'Almost before we knew it, we had left the ground.'
-  )
   const [fontSize, setFontSize] = useState(40)
   const [cateList, handleSelectCate] = useState<boolean[]>(
     new Array(CATEGORIES.length).fill(true)
@@ -51,15 +50,10 @@ const Home: NextPage = () => {
     handleSelectCate(updatedCheckedState)
   }
 
-  const handleRemoveStyle = (index: number) => {
-    removeStyle(index)
-  }
-
   const renderFontCard = useMemo(() => {
     const fontCard: Font[] = []
-    data?.slice(0, 50).map((font) => {
-      const fontFam = font.family.toLowerCase()
-      if (fontFam.includes(keyWord)) {
+    data?.slice(0, 50).forEach((font) => {
+      if (font.family.toLowerCase().includes(keyWord.toLowerCase())) {
         if (cateList[CATEGORIES.indexOf(font.category)]) {
           if (language === 'all-languages') fontCard.push(font)
           else if (font.subsets.includes(language)) fontCard.push(font)
@@ -69,13 +63,10 @@ const Home: NextPage = () => {
     return fontCard
   }, [data, keyWord, cateList, language])
 
-  const setPreviewText = (val: string) => {
+  const onChangePreviewText = (val: string) => {
     if (val === '')
-      setPreview('Almost before we knew it, we had left the ground.')
-    else setPreview(val)
-  }
-  const setSideBar = () => {
-    toggleSideBar(!sideBar)
+      setPreviewText('Almost before we knew it, we had left the ground.')
+    else setPreviewText(val)
   }
 
   const { push } = useRouter()
@@ -85,7 +76,7 @@ const Home: NextPage = () => {
       <div className="grow">
         <Header
           sideBar={sideBar}
-          openSideBar={setSideBar}
+          openSideBar={() => toggleSideBar(!sideBar)}
           hasStyle={stylesList.length !== 0}
         />
 
@@ -115,7 +106,9 @@ const Home: NextPage = () => {
               autoComplete="off"
               autoCorrect="off"
               className="grow outline-none p-4 placeholder:text-gray-500 focus:placeholder:text-blue-600"
-              onChange={({ target: { value: val } }) => setPreviewText(val)}
+              onChange={({ target: { value: val } }) =>
+                onChangePreviewText(val)
+              }
             />
           </div>
           <div className="w-3/12 flex grow items-center pl-2.5 pr-4">
@@ -192,17 +185,15 @@ const Home: NextPage = () => {
         <div className="px-14 mx-auto grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {renderFontCard.map((font) => (
             <div key={font.family}>
-              {font.family.includes(keyWord) ? (
-                <FontCard
-                  key={font.family}
-                  data={font}
-                  previewText={preview}
-                  fontSize={fontSize}
-                  onClick={(font) => {
-                    push(`/speciment/${font.family}`)
-                  }}
-                />
-              ) : null}
+              <FontCard
+                key={font.family}
+                data={font}
+                previewText={previewText}
+                fontSize={fontSize}
+                onClick={(font) => {
+                  push(`/speciment/${font.family}`)
+                }}
+              />
             </div>
           ))}
         </div>
@@ -210,7 +201,7 @@ const Home: NextPage = () => {
       <SideBar
         sideBar={sideBar}
         stylesList={stylesList}
-        handleRemoveStyle={handleRemoveStyle}
+        handleRemoveStyle={removeStyle}
       />
     </div>
   )

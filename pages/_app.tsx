@@ -2,41 +2,16 @@ import '../styles/globals.css'
 import type { AppProps } from 'next/app'
 import { SideBarContextProvider } from 'context/sidebarcontext'
 import { StylesListContextProvider } from 'context/styleslistcontext'
-import { useState, useEffect } from 'react'
-
-function useStickyState(defaultValue: string[], key: string) {
-  const [value, setValue] = useState(() => {
-    const stickyValue =
-      typeof window !== 'undefined' ? window.localStorage.getItem(key) : ''
-    return stickyValue ? JSON.parse(stickyValue) : defaultValue
-  })
-  useEffect(() => {
-    window.localStorage.setItem(key, JSON.stringify(value))
-  }, [key, value])
-  return [value, setValue]
-}
-function useStickyStateSideBar(defaultValue: boolean, key: string) {
-  const [value, setValue] = useState(() => {
-    const stickyValue =
-      typeof window !== 'undefined' ? window.localStorage.getItem(key) : ''
-    return stickyValue ? JSON.parse(stickyValue) : defaultValue
-  })
-  useEffect(() => {
-    window.localStorage.setItem(key, JSON.stringify(value))
-  }, [key, value])
-  return [value, setValue]
-}
+import { PreviewTextContextProvider } from 'context/previewtextcontext'
+import { useState } from 'react'
 
 function MyApp({ Component, pageProps }: AppProps) {
-  const [sideBar, setSideBar] = useStickyStateSideBar(
-    false,
-    'userToggleSideBar'
-  )
+  const [sideBar, setSideBar] = useState(false)
   const toggleSideBar = () => {
     setSideBar(!sideBar)
   }
 
-  const [stylesList, setStylesList] = useStickyState([], 'userSelectedFonts')
+  const [stylesList, setStylesList] = useState<string[]>([])
 
   const addStyle = (newStyle: string) => {
     if (!stylesList.includes(newStyle))
@@ -50,10 +25,16 @@ function MyApp({ Component, pageProps }: AppProps) {
     setStylesList(newArr)
   }
 
+  const [previewText, setPreviewText] = useState(
+    'Almost before we knew it, we had left the ground.'
+  )
+
   return (
     <StylesListContextProvider value={{ stylesList, addStyle, removeStyle }}>
       <SideBarContextProvider value={{ sideBar, toggleSideBar }}>
-        <Component {...pageProps} />
+        <PreviewTextContextProvider value={{ previewText, setPreviewText }}>
+          <Component {...pageProps} />
+        </PreviewTextContextProvider>
       </SideBarContextProvider>
     </StylesListContextProvider>
   )
