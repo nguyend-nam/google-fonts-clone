@@ -1,9 +1,9 @@
 import cx from 'classnames'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMinusCircle } from '@fortawesome/free-solid-svg-icons'
-import { sortStylesList } from 'constants/sortstyleslist'
-import { generatelink } from 'constants/generatelink'
-import { generatecss } from 'constants/generatecss'
+import { sortStylesList } from 'utils/sort-styles-list'
+import { generatelink } from 'utils/generate-link'
+import { generatecss } from 'utils/generate-css'
 
 interface SideBarProps {
   sideBar: boolean
