@@ -1,8 +1,8 @@
 import '../styles/globals.css'
 import type { AppProps } from 'next/app'
-import { SideBarContextProvider } from 'context/sidebarcontext'
-import { StylesListContextProvider } from 'context/styleslistcontext'
-import { PreviewTextContextProvider } from 'context/previewtextcontext'
+import { SideBarContextProvider } from 'context/sidebar'
+import { StylesListContextProvider } from 'context/styleslist'
+import { PreviewTextContextProvider } from 'context/previewtext'
 import { useState } from 'react'
 
 function MyApp({ Component, pageProps }: AppProps) {

@@ -6,9 +6,9 @@ import { FONT_SIZE } from 'constants/fontsize-options'
 import { Font } from 'types/schema'
 import { StyleCard } from 'components/StyleCard'
 import { Header } from 'components/Header'
-import { useSideBarContext } from 'context/sidebarcontext'
-import { useStylesListContext } from 'context/styleslistcontext'
-import { usePreviewTextContext } from 'context/previewtextcontext'
+import { useSideBarContext } from 'context/sidebar'
+import { useStylesListContext } from 'context/styleslist'
+import { usePreviewTextContext } from 'context/previewtext'
 import { SideBar } from 'components/SideBar'
 
 function fontDataToCSS(data: Font) {
