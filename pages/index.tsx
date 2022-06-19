@@ -3,7 +3,6 @@ import type { NextPage } from 'next'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSearch, faRedo } from '@fortawesome/free-solid-svg-icons'
 import { DropdownButton } from '../components/DropdownButton'
-import { DropdownButtonString } from '../components/DropdownButtonString'
 import { FontCard } from '../components/FontCard'
 import { useRouter } from 'next/router'
 import useFetchFonts from 'hooks/fetchFonts'
@@ -13,7 +12,6 @@ import { useSideBarContext } from 'context/sidebarcontext'
 import { useStylesListContext } from 'context/styleslistcontext'
 import { usePreviewTextContext } from 'context/previewtextcontext'
 import { Font } from 'types/schema'
-import { PREVIEW } from '../constants/preview-options'
 import { FONT_SIZE } from '../constants/fontsize-options'
 import { CATEGORIES } from 'constants/category'
 import { LANGUAGES } from 'constants/language'
@@ -36,7 +34,6 @@ const Home: NextPage = () => {
   const { stylesList, removeStyle } = useStylesListContext()
   const { previewText, setPreviewText } = usePreviewTextContext()
   const [keyWord, setKeyWord] = useState('')
-  const [previewType, setPreviewType] = useState('Sentence')
   const [fontSize, setFontSize] = useState(40)
   const [cateList, handleSelectCate] = useState<boolean[]>(
     new Array(CATEGORIES.length).fill(true)
@@ -95,14 +92,9 @@ const Home: NextPage = () => {
             />
           </div>
           <div className="w-1/3 grow hidden lg:flex items-center pl-2.5 pr-4">
-            <DropdownButtonString
-              displayValue={previewType}
-              options={PREVIEW}
-              optionsClick={(val: string) => setPreviewType(val)}
-            />
             <input
               id="previewInput"
-              placeholder={`Type ${previewType}`}
+              placeholder={`Type Something`}
               autoComplete="off"
               autoCorrect="off"
               className="grow outline-none p-4 placeholder:text-gray-500 focus:placeholder:text-blue-600"
@@ -133,7 +125,6 @@ const Home: NextPage = () => {
             className="w-max p-2.5 px-4 text-gray-600"
             onClick={() => {
               setKeyWord('')
-              setPreviewType('Sentence')
               setFontSize(40)
             }}
           >

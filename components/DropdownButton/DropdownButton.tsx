@@ -23,7 +23,7 @@ export const DropdownButton = (props: DropdownProps) => {
       <button
         onClick={openSideBar}
         className={cx(
-          'p-2 w-16 flex justify-between items-center rounded-md hover:bg-blue-50 hover:text-blue-700',
+          'p-2 w-20 flex justify-between items-center rounded-md hover:bg-blue-50 hover:text-blue-700',
           {
             'bg-blue-50 text-blue-700': dropdownContent,
             'bg-white text-gray-700': !dropdownContent,
@@ -31,7 +31,7 @@ export const DropdownButton = (props: DropdownProps) => {
           className
         )}
       >
-        {displayValue}{' '}
+        {displayValue}px
         <FontAwesomeIcon icon={dropdownContent ? faCaretUp : faCaretDown} />
       </button>
       <div

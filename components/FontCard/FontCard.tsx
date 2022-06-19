@@ -97,7 +97,7 @@ export function FontCard(props: CardProps) {
         </span>
       </div>
 
-      <div className="mb-17 break-all" ref={fontRef}>
+      <div className="mb-17 break-words" ref={fontRef}>
         {previewText}
       </div>
     </div>

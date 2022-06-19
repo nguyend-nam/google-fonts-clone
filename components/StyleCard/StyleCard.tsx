@@ -45,7 +45,11 @@ export function StyleCard(props: StyleProps) {
             ? variant.fontStyle[0].toUpperCase() + variant.fontStyle.slice(1)
             : ''}{' '}
         </div>
-        <div className="my-4 overflow-auto" style={variant} onChange={onChange}>
+        <div
+          className="my-4 pr-4 overflow-auto break-all"
+          style={variant}
+          onChange={onChange}
+        >
           {previewText}
         </div>
       </div>

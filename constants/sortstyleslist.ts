@@ -4,18 +4,18 @@ export function sortStylesList(a: string, b: string) {
   } else if (a.split(' ')[0] < b.split(' ')[0]) {
     return -1
   } else {
-    let la = a.split(' ').length - 1,
-      lb = b.split(' ').length - 1
-    if (a.split(' ')[la] === 'Italic') la--
-    if (b.split(' ')[lb] === 'Italic') lb--
-    if (a.split(' ')[la] > b.split(' ')[lb]) {
+    if (a.includes('Italic') && !b.includes('Italic')) {
       return 1
-    } else if (a.split(' ')[la] < b.split(' ')[lb]) {
+    } else if (!a.includes('Italic') && b.includes('Italic')) {
       return -1
     } else {
-      if (a.split(' ').length > b.split(' ').length) {
+      let la = a.split(' ').length - 3,
+        lb = b.split(' ').length - 3
+      if (a.split(' ')[la] === 'Italic') la--
+      if (b.split(' ')[lb] === 'Italic') lb--
+      if (a.split(' ')[la] > b.split(' ')[lb]) {
         return 1
-      } else if (a.split(' ').length < b.split(' ').length) {
+      } else if (a.split(' ')[la] < b.split(' ')[lb]) {
         return -1
       } else return 0
     }

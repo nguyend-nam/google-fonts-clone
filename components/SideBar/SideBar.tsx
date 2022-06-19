@@ -1,4 +1,6 @@
 import cx from 'classnames'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faMinusCircle } from '@fortawesome/free-solid-svg-icons'
 import { sortStylesList } from 'constants/sortstyleslist'
 import { generatelink } from 'constants/generatelink'
 import { generatecss } from 'constants/generatecss'
@@ -34,7 +36,7 @@ export function SideBar(props: SideBarProps) {
               key={index}
               onClick={() => handleRemoveStyle(index)}
               className={cx(
-                'text-left p-2.5 px-6 text-lg text-blue-600 w-full border-x border-gray-300 disabled:text-gray-200 hover:bg-gray-50',
+                'flex justify-between items-center text-left p-2.5 px-6 text-lg text-blue-600 w-full border-x border-gray-300 disabled:text-gray-200 hover:bg-gray-50',
                 {
                   'mb-1 border-b border-gray-300':
                     (index < stylesList.sort(sortStylesList).length - 1 &&
@@ -72,6 +74,7 @@ export function SideBar(props: SideBarProps) {
               )}
             >
               {element.split(' ').slice(0, -1).join(' ')}
+              <FontAwesomeIcon className="ml-2" icon={faMinusCircle} />
             </button>
           )
         })}
