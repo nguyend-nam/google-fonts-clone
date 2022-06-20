@@ -1,5 +1,6 @@
 import '../styles/globals.css'
 import type { AppProps } from 'next/app'
+import Head from 'next/head'
 import { SideBarContextProvider } from 'context/sidebar'
 import { StylesListContextProvider } from 'context/styleslist'
 import { PreviewTextContextProvider } from 'context/previewtext'
@@ -30,13 +31,18 @@ function MyApp({ Component, pageProps }: AppProps) {
   )
 
   return (
-    <StylesListContextProvider value={{ stylesList, addStyle, removeStyle }}>
-      <SideBarContextProvider value={{ sideBar, toggleSideBar }}>
-        <PreviewTextContextProvider value={{ previewText, setPreviewText }}>
-          <Component {...pageProps} />
-        </PreviewTextContextProvider>
-      </SideBarContextProvider>
-    </StylesListContextProvider>
+    <>
+      <Head>
+        <title>Google Fonts Clone</title>
+      </Head>
+      <StylesListContextProvider value={{ stylesList, addStyle, removeStyle }}>
+        <SideBarContextProvider value={{ sideBar, toggleSideBar }}>
+          <PreviewTextContextProvider value={{ previewText, setPreviewText }}>
+            <Component {...pageProps} />
+          </PreviewTextContextProvider>
+        </SideBarContextProvider>
+      </StylesListContextProvider>
+    </>
   )
 }
 

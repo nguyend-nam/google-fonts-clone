@@ -75,7 +75,9 @@ export function FontCard(props: CardProps) {
 
   return (
     <div
-      className={cx('border rounded p-4 h-full')}
+      className={cx(
+        'border rounded-lg p-4 h-full min-h-[270px] ease-in-out duration-150 hover:-translate-y-0.5 hover:shadow-md'
+      )}
       tabIndex={1}
       role="button"
       onClick={() => {

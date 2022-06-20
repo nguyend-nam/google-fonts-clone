@@ -6,9 +6,6 @@ module.exports = {
   ],
   theme: {
     extend: {
-      rotate: {
-        22.5: '22.5deg',
-      },
       colors: {
         blue: {
           600: '#1a73e8',

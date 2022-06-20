@@ -1,7 +1,10 @@
+import cx from 'classnames'
+
 interface StyleProps {
   variant: variant
   previewText: string
-  onClick?: () => void
+  fontSize: number
+  onClickAdd?: () => void
   onChange?: () => void
 }
 
@@ -15,7 +18,7 @@ type variant = {
 }
 
 export function StyleCard(props: StyleProps) {
-  const { variant, previewText, onClick, onChange } = props
+  const { variant, previewText, onClickAdd, onChange } = props
   return (
     <div
       key={variant.fontFamily}
@@ -46,15 +49,22 @@ export function StyleCard(props: StyleProps) {
             : ''}{' '}
         </div>
         <div
-          className="my-4 pr-4 overflow-auto break-all"
+          className={cx('my-4 pr-4 overflow-auto break-all', {
+            'opacity-0 select-none': previewText.trim() === '',
+            '': previewText.trim() !== '',
+          })}
           style={variant}
           onChange={onChange}
         >
-          {previewText}
+          {previewText.trim() !== '' ? previewText : 'a'}
         </div>
       </div>
-      <button onClick={onClick} className="whitespace-nowrap text-blue-600">
+      <button
+        onClick={onClickAdd}
+        className="flex items-center whitespace-nowrap text-blue-600 p-2 rounded-sm hover:bg-gray-50 hover:text-blue-700"
+      >
         Select this style
+        <span className="material-symbols-sharp ml-2">add_circle</span>
       </button>
     </div>
   )

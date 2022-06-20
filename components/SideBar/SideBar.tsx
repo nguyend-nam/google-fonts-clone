@@ -1,6 +1,4 @@
 import cx from 'classnames'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faMinusCircle } from '@fortawesome/free-solid-svg-icons'
 import { sortStylesList } from 'utils/sort-styles-list'
 import { generatelink } from 'utils/generate-link'
 import { generatecss } from 'utils/generate-css'
@@ -13,6 +11,7 @@ interface SideBarProps {
 
 export function SideBar(props: SideBarProps) {
   const { sideBar, stylesList, handleRemoveStyle } = props
+
   return (
     <aside
       className={cx(
@@ -26,61 +25,75 @@ export function SideBar(props: SideBarProps) {
       <h3 className="bg-white h-[65px] sticky top-0 flex items-center px-4 border-b border-gray-300">
         Selected families
       </h3>
-      <div className="p-4 max-h-80 overflow-auto">
-        <h4 className="text-sm mb-5 font-semibold">
-          {stylesList.length !== 0 ? 'Review' : 'No families selected'}
-        </h4>
-        {stylesList.sort(sortStylesList).map((element, index) => {
-          return (
-            <button
-              key={index}
-              onClick={() => handleRemoveStyle(index)}
-              className={cx(
-                'flex justify-between items-center text-left p-2.5 px-6 text-lg text-blue-600 w-full border-x border-gray-300 disabled:text-gray-200 hover:bg-gray-50',
-                {
-                  'mb-1 border-b border-gray-300':
-                    (index < stylesList.sort(sortStylesList).length - 1 &&
-                      stylesList.sort(sortStylesList)[index].split(' ')[0] !==
-                        stylesList
-                          .sort(sortStylesList)
-                          [index + 1].split(' ')[0]) ||
-                    index === stylesList.sort(sortStylesList).length - 1,
-                  'mb-0': !(
-                    (index < stylesList.sort(sortStylesList).length - 1 &&
-                      stylesList.sort(sortStylesList)[index].split(' ')[0] !==
-                        stylesList
-                          .sort(sortStylesList)
-                          [index + 1].split(' ')[0]) ||
-                    index === stylesList.sort(sortStylesList).length - 1
-                  ),
-                },
-                {
-                  'mt-1 border-t border-gray-300':
-                    (index > 0 &&
-                      stylesList.sort(sortStylesList)[index].split(' ')[0] !==
-                        stylesList
-                          .sort(sortStylesList)
-                          [index - 1].split(' ')[0]) ||
-                    index === 0,
-                  'mt-0': !(
-                    (index > 0 &&
-                      stylesList.sort(sortStylesList)[index].split(' ')[0] !==
-                        stylesList
-                          .sort(sortStylesList)
-                          [index - 1].split(' ')[0]) ||
-                    index == 0
-                  ),
-                }
-              )}
-            >
-              {element.split(' ').slice(0, -1).join(' ')}
-              <FontAwesomeIcon className="ml-2" icon={faMinusCircle} />
-            </button>
-          )
-        })}
-      </div>
+      {stylesList.length !== 0 ? (
+        <div className="p-4 max-h-[40%] overflow-auto">
+          <h4
+            className={cx('text-sm mb-5 font-semibold', {
+              'text-center': stylesList.length === 0,
+              '': stylesList.length !== 0,
+            })}
+          >
+            Review
+          </h4>
+
+          {stylesList.sort(sortStylesList).map((element, index) => {
+            return (
+              <button
+                key={index}
+                onClick={() => handleRemoveStyle(index)}
+                className={cx(
+                  'flex justify-between items-center text-left p-2.5 px-6 text-lg text-blue-600 w-full border-x border-gray-300 hover:text-blue-700 hover:bg-gray-50',
+                  {
+                    'mb-1 border-b border-gray-300':
+                      (index < stylesList.sort(sortStylesList).length - 1 &&
+                        stylesList.sort(sortStylesList)[index].split(' ')[0] !==
+                          stylesList
+                            .sort(sortStylesList)
+                            [index + 1].split(' ')[0]) ||
+                      index === stylesList.sort(sortStylesList).length - 1,
+                    'mb-0': !(
+                      (index < stylesList.sort(sortStylesList).length - 1 &&
+                        stylesList.sort(sortStylesList)[index].split(' ')[0] !==
+                          stylesList
+                            .sort(sortStylesList)
+                            [index + 1].split(' ')[0]) ||
+                      index === stylesList.sort(sortStylesList).length - 1
+                    ),
+                  },
+                  {
+                    'mt-1 border-t border-gray-300':
+                      (index > 0 &&
+                        stylesList.sort(sortStylesList)[index].split(' ')[0] !==
+                          stylesList
+                            .sort(sortStylesList)
+                            [index - 1].split(' ')[0]) ||
+                      index === 0,
+                    'mt-0': !(
+                      (index > 0 &&
+                        stylesList.sort(sortStylesList)[index].split(' ')[0] !==
+                          stylesList
+                            .sort(sortStylesList)
+                            [index - 1].split(' ')[0]) ||
+                      index == 0
+                    ),
+                  }
+                )}
+              >
+                {element.split(' ').slice(0, -1).join(' ')}
+                <span className="material-symbols-sharp">remove_circle</span>
+              </button>
+            )
+          })}
+        </div>
+      ) : (
+        <div className="h-[90%] flex flex-col justify-center text-center">
+          <span className="text-4xl mb-4">¯\_(ツ)_/¯</span>
+          <span className="text-lg">You don&rsquo;t have any fonts yet.</span>
+          <span className="text-lg">Choose a font to get started.</span>
+        </div>
+      )}
       <div
-        className={cx('p-4 max-h-96 overflow-auto', {
+        className={cx('p-4 max-h-[50%] overflow-auto', {
           hidden: stylesList.sort(sortStylesList).length === 0,
           '': !(stylesList.sort(sortStylesList).length === 0),
         })}

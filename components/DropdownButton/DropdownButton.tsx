@@ -1,6 +1,4 @@
 import React, { useState } from 'react'
-import { faCaretDown, faCaretUp } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import cx from 'classnames'
 
 interface DropdownProps {
@@ -14,32 +12,32 @@ export const DropdownButton = (props: DropdownProps) => {
   const { displayValue, options, optionsClick, className } = props
   const [dropdownContent, toggleDropdown] = useState(false)
 
-  const openSideBar = () => {
-    toggleDropdown(!dropdownContent)
-  }
-
   return (
     <div className="relative">
       <button
-        onClick={openSideBar}
+        onClick={() => {
+          toggleDropdown(!dropdownContent)
+        }}
         className={cx(
-          'p-2 w-20 flex justify-between items-center rounded-md hover:bg-blue-50 hover:text-blue-700',
+          'p-2 w-20 flex justify-between items-center rounded-md hover:bg-blue-50 hover:text-blue-600',
           {
-            'bg-blue-50 text-blue-700': dropdownContent,
+            'bg-blue-50 text-blue-600': dropdownContent,
             'bg-white text-gray-700': !dropdownContent,
           },
           className
         )}
       >
-        {displayValue}px
-        <FontAwesomeIcon icon={dropdownContent ? faCaretUp : faCaretDown} />
+        <span>{displayValue}px</span>
+        <span className="material-symbols-outlined">
+          {dropdownContent ? 'arrow_drop_up' : 'arrow_drop_down'}
+        </span>
       </button>
       <div
         className={cx(
-          'shadow-lg border border-gray-100 mt-1 rounded-xl bg-white h-40 w-20 overflow-auto',
+          'shadow-lg border border-gray-100 mt-1 rounded-xl bg-white h-40 w-20 overflow-auto absolute',
           {
-            'block absolute': dropdownContent,
-            'hidden absolute': !dropdownContent,
+            block: dropdownContent,
+            hidden: !dropdownContent,
           }
         )}
       >
@@ -47,7 +45,10 @@ export const DropdownButton = (props: DropdownProps) => {
           <button
             className="block hover:bg-blue-50 w-full text-left p-1 px-2"
             key={index}
-            onClick={() => optionsClick(option)}
+            onClick={() => {
+              optionsClick(option)
+              toggleDropdown(!dropdownContent)
+            }}
           >
             {option}
           </button>

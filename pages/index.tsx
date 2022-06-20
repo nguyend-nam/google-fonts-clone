@@ -1,13 +1,12 @@
-import React, { useMemo, useState } from 'react'
+import React, { useMemo, useState, useEffect } from 'react'
 import type { NextPage } from 'next'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faSearch, faRedo } from '@fortawesome/free-solid-svg-icons'
 import { DropdownButton } from '../components/DropdownButton'
 import { FontCard } from '../components/FontCard'
 import { useRouter } from 'next/router'
 import useFetchFonts from 'hooks/fetchFonts'
 import { Header } from '../components/Header'
 import { SideBar } from 'components/SideBar'
+import { Button } from 'components/Button'
 import { useSideBarContext } from 'context/sidebar'
 import { useStylesListContext } from 'context/styleslist'
 import { usePreviewTextContext } from 'context/previewtext'
@@ -47,6 +46,31 @@ const Home: NextPage = () => {
     handleSelectCate(updatedCheckedState)
   }
 
+  if (previewText === '')
+    setPreviewText('Almost before we knew it, we had left the ground.')
+
+  useEffect(() => {
+    const iconsStyle = document.createElement('link')
+    iconsStyle.setAttribute('rel', 'stylesheet')
+    iconsStyle.setAttribute(
+      'href',
+      'https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,600,1,0'
+    )
+    const iconsStyle1 = document.createElement('link')
+    iconsStyle1.setAttribute('rel', 'stylesheet')
+    iconsStyle1.setAttribute(
+      'href',
+      'https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp:opsz,wght,FILL,GRAD@48,400,0,0'
+    )
+
+    document.head.appendChild(iconsStyle)
+    document.head.appendChild(iconsStyle1)
+
+    return () => {
+      document.head.removeChild(iconsStyle)
+    }
+  }, [])
+
   const renderFontCard = useMemo(() => {
     const fontCard: Font[] = []
     data?.slice(0, 50).forEach((font) => {
@@ -60,12 +84,6 @@ const Home: NextPage = () => {
     return fontCard
   }, [data, keyWord, cateList, language])
 
-  const onChangePreviewText = (val: string) => {
-    if (val === '')
-      setPreviewText('Almost before we knew it, we had left the ground.')
-    else setPreviewText(val)
-  }
-
   const { push } = useRouter()
 
   return (
@@ -77,10 +95,13 @@ const Home: NextPage = () => {
           hasStyle={stylesList.length !== 0}
         />
 
-        <div className="sticky top-0 bg-white mx-14 my-4 flex divide-x divide-gray-300 border border-gray-300 rounded-full font-light">
+        <div className="sticky z-10 top-0 bg-white mx-14 my-4 flex divide-x border rounded-full font-light">
           <div className="w-1/2 lg:w-3/12 flex items-center pl-4">
-            <label htmlFor="searchInput" className="text-gray-600">
-              <FontAwesomeIcon icon={faSearch} />
+            <label
+              htmlFor="searchInput"
+              className="text-gray-600 flex flex-col justify-center"
+            >
+              <span className="material-symbols-outlined">search</span>
             </label>
             <input
               id="searchInput"
@@ -93,14 +114,18 @@ const Home: NextPage = () => {
           </div>
           <div className="w-1/3 grow hidden lg:flex items-center pl-2.5 pr-4">
             <input
+              defaultValue={
+                previewText ===
+                'Almost before we knew it, we had left the ground.'
+                  ? ''
+                  : previewText
+              }
               id="previewInput"
               placeholder={`Type Something`}
               autoComplete="off"
               autoCorrect="off"
               className="grow outline-none p-4 placeholder:text-gray-500 focus:placeholder:text-blue-600"
-              onChange={({ target: { value: val } }) =>
-                onChangePreviewText(val)
-              }
+              onChange={({ target: { value: val } }) => setPreviewText(val)}
             />
           </div>
           <div className="w-3/12 flex grow items-center pl-2.5 pr-4">
@@ -121,15 +146,35 @@ const Home: NextPage = () => {
               }
             />
           </div>
-          <button
-            className="w-max p-2.5 px-4 text-gray-600"
-            onClick={() => {
-              setKeyWord('')
-              setFontSize(40)
-            }}
-          >
-            <FontAwesomeIcon icon={faRedo} />
-          </button>
+          <div className="p-2 flex flex-col justify-center">
+            <Button
+              icon="redo"
+              onClick={() => {
+                setKeyWord('')
+                setFontSize(40)
+                setPreviewText(
+                  'Almost before we knew it, we had left the ground.'
+                )
+                const previewInputVal = document.getElementById(
+                  'previewInput'
+                ) as HTMLInputElement
+                if (previewInputVal !== null) previewInputVal.value = ''
+                const searchInputVal = document.getElementById(
+                  'searchInput'
+                ) as HTMLInputElement
+                if (searchInputVal !== null) searchInputVal.value = ''
+              }}
+              className="h-8 w-8 grid items-center justify-center text-xl rounded-full bg-white text-gray-600 disabled:text-gray-400 hover:bg-gray-50 hover:text-gray-800"
+              disabled={
+                previewText !==
+                  'Almost before we knew it, we had left the ground.' ||
+                fontSize !== 40 ||
+                keyWord !== ''
+                  ? false
+                  : true
+              }
+            />
+          </div>
         </div>
 
         <div className="p-2 px-14 flex">
@@ -182,7 +227,7 @@ const Home: NextPage = () => {
                 previewText={previewText}
                 fontSize={fontSize}
                 onClick={(font) => {
-                  push(`/speciment/${font.family}`)
+                  push(`/specimen/${font.family}`)
                 }}
               />
             </div>

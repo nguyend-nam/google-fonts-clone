@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import { Button } from 'components/Button'
 import cx from 'classnames'
+import { useRouter } from 'next/router'
 
 interface HeaderProps {
   sideBar: boolean
@@ -9,13 +10,20 @@ interface HeaderProps {
 }
 
 export function Header(props: HeaderProps) {
+  const { push } = useRouter()
   const { sideBar, openSideBar, hasStyle } = props
   const logoStyle = {
     fontFamily: 'Futura',
   }
+
   return (
     <header className="grow p-2 px-14 border border-t-0 border-x-0 border-b-1 border-b-gray-300 flex justify-between items-center">
-      <button className="flex items-center">
+      <button
+        className="flex items-center"
+        onClick={() => {
+          push(`/`)
+        }}
+      >
         <Image
           src="/Google-Fonts-Logo.png"
           alt="Google fonts logo"
@@ -34,8 +42,9 @@ export function Header(props: HeaderProps) {
           icon="family"
           onClick={openSideBar}
           className={cx(
+            'h-12 w-12 grid items-center justify-center text-xl rounded-full bg-white text-gray-600 hover:bg-gray-50 hover:text-gray-800',
             {
-              'after:content-["●"] after:absolute after:top-0 after:right-0 after:text-xs after:text-red-600':
+              'after:content-["●"] after:absolute after:-top-1 after:right-1 after:text-[8px] after:text-red-600':
                 hasStyle,
               '': !hasStyle,
             },

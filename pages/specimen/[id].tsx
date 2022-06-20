@@ -48,8 +48,29 @@ const FontDetailPage = () => {
     .replace(/\s+/g, '-')
     .toLowerCase()}`
   style.innerHTML = fontDataToCSS(fontDetails)
+  const iconsStyle = document.createElement('link')
+  iconsStyle.setAttribute('rel', 'stylesheet')
+  iconsStyle.setAttribute(
+    'href',
+    'https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,600,1,0'
+  )
+
+  const iconsStyle1 = document.createElement('link')
+  iconsStyle1.setAttribute('rel', 'stylesheet')
+  iconsStyle1.setAttribute(
+    'href',
+    'https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp:opsz,wght,FILL,GRAD@48,400,0,0'
+  )
 
   document.head.appendChild(style)
+  document.head.appendChild(iconsStyle)
+  document.head.appendChild(iconsStyle1)
+
+  const onChangePreviewText = (val: string) => {
+    if (val === '')
+      setPreviewText('Almost before we knew it, we had left the ground.')
+    else setPreviewText(val)
+  }
 
   let variantStyles = []
 
@@ -116,6 +137,12 @@ const FontDetailPage = () => {
                     onChange={({ target: { value: val } }) =>
                       setPreviewText(val)
                     }
+                    onBlur={() => {
+                      if (previewText === '')
+                        setPreviewText(
+                          'Almost before we knew it, we had left the ground.'
+                        )
+                    }}
                   />
                   <label className="absolute p-0.5 left-8 -top-2.5 bg-white text-gray-500 text-xs">
                     Type here to preview text
@@ -149,7 +176,8 @@ const FontDetailPage = () => {
                   }
                   variant={variant}
                   previewText={previewText}
-                  onClick={() =>
+                  fontSize={variant.fontSize}
+                  onClickAdd={() =>
                     addStyle(
                       variant.fontFamily
                         .split(' ')
@@ -185,7 +213,7 @@ const FontDetailPage = () => {
                         variant.fontCategory
                     )
                   }
-                  onChange={() => setPreviewText}
+                  onChange={() => onChangePreviewText}
                 />
               ))}
             </div>
