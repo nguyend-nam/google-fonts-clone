@@ -1,4 +1,4 @@
-export function generatelink(stylesList: string[]) {
+export function generateLink(stylesList: string[]) {
   let ans = ''
   let wghtFlag = false
   let italFlag = false

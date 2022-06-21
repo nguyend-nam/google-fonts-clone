@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useEffect } from 'react'
+import React, { useMemo, useState, useRef } from 'react'
 import type { NextPage } from 'next'
 import { DropdownButton } from '../components/DropdownButton'
 import { FontCard } from '../components/FontCard'
@@ -38,38 +38,21 @@ const Home: NextPage = () => {
     new Array(CATEGORIES.length).fill(true)
   )
   const [language, setLanguage] = useState('all-languages')
-
   const handleOnChangeCheckBox = (position: number) => {
     const updatedCheckedState = cateList.map((item: boolean, index: number) =>
       index === position ? !item : item
     )
     handleSelectCate(updatedCheckedState)
   }
+  const searchInputRef = useRef<HTMLInputElement>(null)
+  const previewInputRef = useRef<HTMLInputElement>(null)
+  const isDefault =
+    previewText === 'Almost before we knew it, we had left the ground.' &&
+    fontSize === 40 &&
+    keyWord === ''
 
   if (previewText === '')
     setPreviewText('Almost before we knew it, we had left the ground.')
-
-  useEffect(() => {
-    const iconsStyle = document.createElement('link')
-    iconsStyle.setAttribute('rel', 'stylesheet')
-    iconsStyle.setAttribute(
-      'href',
-      'https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,600,1,0'
-    )
-    const iconsStyle1 = document.createElement('link')
-    iconsStyle1.setAttribute('rel', 'stylesheet')
-    iconsStyle1.setAttribute(
-      'href',
-      'https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp:opsz,wght,FILL,GRAD@48,400,0,0'
-    )
-
-    document.head.appendChild(iconsStyle)
-    document.head.appendChild(iconsStyle1)
-
-    return () => {
-      document.head.removeChild(iconsStyle)
-    }
-  }, [])
 
   const renderFontCard = useMemo(() => {
     const fontCard: Font[] = []
@@ -94,7 +77,6 @@ const Home: NextPage = () => {
           openSideBar={() => toggleSideBar(!sideBar)}
           hasStyle={stylesList.length !== 0}
         />
-
         <div className="sticky z-10 top-0 bg-white mx-14 my-4 flex divide-x border rounded-full font-light">
           <div className="w-1/2 lg:w-3/12 flex items-center pl-4">
             <label
@@ -104,7 +86,7 @@ const Home: NextPage = () => {
               <span className="material-symbols-outlined">search</span>
             </label>
             <input
-              id="searchInput"
+              ref={searchInputRef}
               placeholder="Search fonts"
               autoComplete="off"
               autoCorrect="off"
@@ -120,7 +102,7 @@ const Home: NextPage = () => {
                   ? ''
                   : previewText
               }
-              id="previewInput"
+              ref={previewInputRef}
               placeholder={`Type Something`}
               autoComplete="off"
               autoCorrect="off"
@@ -155,57 +137,47 @@ const Home: NextPage = () => {
                 setPreviewText(
                   'Almost before we knew it, we had left the ground.'
                 )
-                const previewInputVal = document.getElementById(
-                  'previewInput'
-                ) as HTMLInputElement
-                if (previewInputVal !== null) previewInputVal.value = ''
-                const searchInputVal = document.getElementById(
-                  'searchInput'
-                ) as HTMLInputElement
-                if (searchInputVal !== null) searchInputVal.value = ''
+                if (searchInputRef.current !== null)
+                  searchInputRef.current.value = ''
+                if (previewInputRef.current !== null)
+                  previewInputRef.current.value = ''
               }}
               className="h-8 w-8 grid items-center justify-center text-xl rounded-full bg-white text-gray-600 disabled:text-gray-400 hover:bg-gray-50 hover:text-gray-800"
-              disabled={
-                previewText !==
-                  'Almost before we knew it, we had left the ground.' ||
-                fontSize !== 40 ||
-                keyWord !== ''
-                  ? false
-                  : true
-              }
+              disabled={isDefault}
             />
           </div>
         </div>
 
-        <div className="p-2 px-14 flex">
+        <div className="p-2 px-14 flex items-center">
           <h3 className="mr-4 text-blue-600">Categories</h3>
           {CATEGORIES.map((name, index) => (
-            <div key={index} className="flex items-center mr-4">
+            <div key={name} className="flex items-center mr-4">
               <input
                 className="mr-1"
                 type="checkbox"
-                id={`checkbox-${index}`}
+                id={`checkbox-${name}`}
                 name={name}
                 value={name}
                 checked={cateList[index]}
                 onChange={() => handleOnChangeCheckBox(index)}
               />
-              <label htmlFor={`checkbox-${index}`}>{formatText(name)}</label>
+              <label htmlFor={`checkbox-${name}`}>{formatText(name)}</label>
             </div>
           ))}
         </div>
 
-        <div className="p-2 pb-10 px-14 flex">
+        <div className="p-2 pb-10 px-14 flex items-center">
           <h3 className="mr-4 text-blue-600">Languages</h3>
           <select
+            className="rounded-full border p-2 w-36 text-sm hover:bg-gray-100 hover:text-blue-600"
             defaultValue={language}
             onChange={({ target: { value: val } }) => setLanguage(val)}
           >
-            {LANGUAGES.map((name, index) => (
+            {LANGUAGES.map((name) => (
               <option
-                key={index}
+                key={name}
                 className="flex items-center mr-4"
-                id={`checkbox-${index}`}
+                id={`checkbox-${name}`}
                 value={name}
               >
                 {formatText(name)}

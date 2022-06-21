@@ -1,4 +1,4 @@
-export function generatecss(stylesList: string[]) {
+export function generateCSS(stylesList: string[]) {
   let ans = ''
   let ansArr: string[] = []
   stylesList.forEach((style) => {
@@ -8,7 +8,9 @@ export function generatecss(stylesList: string[]) {
       `'` +
       ', ' +
       style.split(' ')[style.split(' ').length - 1]
-    if (!ansArr.includes(ans)) ansArr.push(ans)
+    if (!ansArr.includes(ans)) {
+      ansArr.push(ans)
+    }
   })
 
   return ansArr

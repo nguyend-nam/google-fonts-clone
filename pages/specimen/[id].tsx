@@ -10,6 +10,7 @@ import { useSideBarContext } from 'context/sidebar'
 import { useStylesListContext } from 'context/styleslist'
 import { usePreviewTextContext } from 'context/previewtext'
 import { SideBar } from 'components/SideBar'
+import { getFontWeight } from 'utils/get-font-weight'
 
 function fontDataToCSS(data: Font) {
   const { subsets, family, variants, files } = data
@@ -35,7 +36,7 @@ const FontDetailPage = () => {
   const { data } = useFetchFonts()
   const fontDetails = data?.find(({ family }) => family === query.id)
   const { sideBar, toggleSideBar } = useSideBarContext()
-  const { stylesList, addStyle, removeStyle } = useStylesListContext()
+  const { stylesList, removeStyle } = useStylesListContext()
   const { previewText, setPreviewText } = usePreviewTextContext()
   const [fontSize, setFontSize] = useState(64)
 
@@ -48,23 +49,8 @@ const FontDetailPage = () => {
     .replace(/\s+/g, '-')
     .toLowerCase()}`
   style.innerHTML = fontDataToCSS(fontDetails)
-  const iconsStyle = document.createElement('link')
-  iconsStyle.setAttribute('rel', 'stylesheet')
-  iconsStyle.setAttribute(
-    'href',
-    'https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,600,1,0'
-  )
-
-  const iconsStyle1 = document.createElement('link')
-  iconsStyle1.setAttribute('rel', 'stylesheet')
-  iconsStyle1.setAttribute(
-    'href',
-    'https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp:opsz,wght,FILL,GRAD@48,400,0,0'
-  )
 
   document.head.appendChild(style)
-  document.head.appendChild(iconsStyle)
-  document.head.appendChild(iconsStyle1)
 
   const onChangePreviewText = (val: string) => {
     if (val === '')
@@ -114,7 +100,7 @@ const FontDetailPage = () => {
   }
 
   return (
-    <div className="flex w-screen">
+    <div className="flex flex-nowrap">
       <div className="grow">
         <Header
           sideBar={sideBar}
@@ -177,42 +163,20 @@ const FontDetailPage = () => {
                   variant={variant}
                   previewText={previewText}
                   fontSize={variant.fontSize}
-                  onClickAdd={() =>
-                    addStyle(
-                      variant.fontFamily
-                        .split(' ')
-                        .slice(0, -2)
-                        .join(' ')
-                        .slice(1) +
-                        ' ' +
-                        (variant.fontWeight === '100'
-                          ? 'Thin'
-                          : variant.fontWeight === '200'
-                          ? 'ExtraLight'
-                          : variant.fontWeight === '300'
-                          ? 'Light'
-                          : variant.fontWeight === '400'
-                          ? 'Regular'
-                          : variant.fontWeight === '500'
-                          ? 'Medium'
-                          : variant.fontWeight === '600'
-                          ? 'SemiBold'
-                          : variant.fontWeight === '700'
-                          ? 'Bold'
-                          : variant.fontWeight === '800'
-                          ? 'ExtraBold'
-                          : 'Black') +
-                        ' ' +
-                        variant.fontWeight +
-                        ' ' +
-                        (variant.fontStyle === 'italic'
-                          ? variant.fontStyle[0].toUpperCase() +
-                            variant.fontStyle.slice(1)
-                          : '') +
-                        ' ' +
-                        variant.fontCategory
-                    )
-                  }
+                  stylesListElement={[
+                    variant.fontFamily
+                      .split(' ')
+                      .slice(0, -2)
+                      .join(' ')
+                      .slice(1),
+                    getFontWeight(variant.fontWeight),
+                    variant.fontWeight,
+                    variant.fontStyle === 'italic'
+                      ? variant.fontStyle[0].toUpperCase() +
+                        variant.fontStyle.slice(1)
+                      : '',
+                    variant.fontCategory,
+                  ].join(' ')}
                   onChange={() => onChangePreviewText}
                 />
               ))}

@@ -1,10 +1,12 @@
 import cx from 'classnames'
+import { useStylesListContext } from 'context/styleslist'
+import { getFontWeight } from 'utils/get-font-weight'
 
 interface StyleProps {
   variant: variant
   previewText: string
   fontSize: number
-  onClickAdd?: () => void
+  stylesListElement: string
   onChange?: () => void
 }
 
@@ -18,40 +20,27 @@ type variant = {
 }
 
 export function StyleCard(props: StyleProps) {
-  const { variant, previewText, onClickAdd, onChange } = props
+  const { variant, previewText, stylesListElement, onChange } = props
+  const { stylesList, addStyle, removeStyle } = useStylesListContext()
+  const isAdded = stylesList.includes(stylesListElement)
   return (
     <div
       key={variant.fontFamily}
-      className="flex justify-between items-center p-4 border-b border-gray-300"
+      className="grid grid-cols-[minmax(0,_1fr)_190px] auto-cols-auto p-4 border-b border-gray-300"
     >
       <div>
         <div className="text-sm text-gray-600">
-          {variant.fontWeight === '100'
-            ? 'Thin'
-            : variant.fontWeight === '200'
-            ? 'ExtraLight'
-            : variant.fontWeight === '300'
-            ? 'Light'
-            : variant.fontWeight === '400'
-            ? 'Regular'
-            : variant.fontWeight === '500'
-            ? 'Medium'
-            : variant.fontWeight === '600'
-            ? 'SemiBold'
-            : variant.fontWeight === '700'
-            ? 'Bold'
-            : variant.fontWeight === '800'
-            ? 'ExtraBold'
-            : 'Black'}{' '}
-          {variant.fontWeight}{' '}
-          {variant.fontStyle === 'italic'
-            ? variant.fontStyle[0].toUpperCase() + variant.fontStyle.slice(1)
-            : ''}{' '}
+          {[
+            getFontWeight(variant.fontWeight),
+            variant.fontWeight,
+            variant.fontStyle === 'italic'
+              ? variant.fontStyle[0].toUpperCase() + variant.fontStyle.slice(1)
+              : '',
+          ].join(' ')}
         </div>
         <div
-          className={cx('my-4 pr-4 overflow-auto break-all', {
+          className={cx('my-4 pr-4 overflow-auto break-all whitespace-nowrap', {
             'opacity-0 select-none': previewText.trim() === '',
-            '': previewText.trim() !== '',
           })}
           style={variant}
           onChange={onChange}
@@ -59,13 +48,29 @@ export function StyleCard(props: StyleProps) {
           {previewText.trim() !== '' ? previewText : 'a'}
         </div>
       </div>
-      <button
-        onClick={onClickAdd}
-        className="flex items-center whitespace-nowrap text-blue-600 p-2 rounded-sm hover:bg-gray-50 hover:text-blue-700"
-      >
-        Select this style
-        <span className="material-symbols-sharp ml-2">add_circle</span>
-      </button>
+      <div className="self-center flex justify-end">
+        {isAdded ? (
+          <button
+            onClick={() => {
+              removeStyle(stylesList.indexOf(stylesListElement))
+            }}
+            className="flex items-center whitespace-nowrap text-blue-600 p-2 rounded-sm hover:bg-gray-50 hover:text-blue-700"
+          >
+            Remove this style
+            <span className="material-symbols-sharp ml-2">remove_circle</span>
+          </button>
+        ) : (
+          <button
+            onClick={() => {
+              addStyle(stylesListElement)
+            }}
+            className="flex items-center whitespace-nowrap text-blue-600 p-2 rounded-sm hover:bg-gray-50 hover:text-blue-700"
+          >
+            Select this style
+            <span className="material-symbols-sharp ml-2">add_circle</span>
+          </button>
+        )}
+      </div>
     </div>
   )
 }

@@ -1,7 +1,8 @@
 import cx from 'classnames'
 import { sortStylesList } from 'utils/sort-styles-list'
-import { generatelink } from 'utils/generate-link'
-import { generatecss } from 'utils/generate-css'
+import { generateLink } from 'utils/generate-link'
+import { generateCSS } from 'utils/generate-css'
+import { generateVariantTitle } from 'utils/generate-variant-title'
 
 interface SideBarProps {
   sideBar: boolean
@@ -30,13 +31,34 @@ export function SideBar(props: SideBarProps) {
           <h4
             className={cx('text-sm mb-5 font-semibold', {
               'text-center': stylesList.length === 0,
-              '': stylesList.length !== 0,
             })}
           >
             Review
           </h4>
 
           {stylesList.sort(sortStylesList).map((element, index) => {
+            const isEndOfStyle = (index: number) =>
+              stylesList
+                .sort(sortStylesList)
+                [index].split(' ')
+                .slice(0, -4)
+                .join(' ') !==
+              stylesList
+                .sort(sortStylesList)
+                [index + 1].split(' ')
+                .slice(0, -4)
+                .join(' ')
+            const isStartOfStyle = (index: number) =>
+              stylesList
+                .sort(sortStylesList)
+                [index].split(' ')
+                .slice(0, -4)
+                .join(' ') !==
+              stylesList
+                .sort(sortStylesList)
+                [index - 1].split(' ')
+                .slice(0, -4)
+                .join(' ')
             return (
               <button
                 key={index}
@@ -46,40 +68,16 @@ export function SideBar(props: SideBarProps) {
                   {
                     'mb-1 border-b border-gray-300':
                       (index < stylesList.sort(sortStylesList).length - 1 &&
-                        stylesList.sort(sortStylesList)[index].split(' ')[0] !==
-                          stylesList
-                            .sort(sortStylesList)
-                            [index + 1].split(' ')[0]) ||
+                        isEndOfStyle(index)) ||
                       index === stylesList.sort(sortStylesList).length - 1,
-                    'mb-0': !(
-                      (index < stylesList.sort(sortStylesList).length - 1 &&
-                        stylesList.sort(sortStylesList)[index].split(' ')[0] !==
-                          stylesList
-                            .sort(sortStylesList)
-                            [index + 1].split(' ')[0]) ||
-                      index === stylesList.sort(sortStylesList).length - 1
-                    ),
                   },
                   {
                     'mt-1 border-t border-gray-300':
-                      (index > 0 &&
-                        stylesList.sort(sortStylesList)[index].split(' ')[0] !==
-                          stylesList
-                            .sort(sortStylesList)
-                            [index - 1].split(' ')[0]) ||
-                      index === 0,
-                    'mt-0': !(
-                      (index > 0 &&
-                        stylesList.sort(sortStylesList)[index].split(' ')[0] !==
-                          stylesList
-                            .sort(sortStylesList)
-                            [index - 1].split(' ')[0]) ||
-                      index == 0
-                    ),
+                      (index > 0 && isStartOfStyle(index)) || index === 0,
                   }
                 )}
               >
-                {element.split(' ').slice(0, -1).join(' ')}
+                {generateVariantTitle(element)}
                 <span className="material-symbols-sharp">remove_circle</span>
               </button>
             )
@@ -95,7 +93,6 @@ export function SideBar(props: SideBarProps) {
       <div
         className={cx('p-4 max-h-[50%] overflow-auto', {
           hidden: stylesList.sort(sortStylesList).length === 0,
-          '': !(stylesList.sort(sortStylesList).length === 0),
         })}
       >
         <h4 className="text-sm mb-5 font-semibold">Use on the web</h4>
@@ -112,14 +109,14 @@ export function SideBar(props: SideBarProps) {
             href=&quot;https://fonts.gstatic.com&quot; crossorigin&gt;
             <br />
             &lt;link href=&quot;https://fonts.googleapis.com/css2?
-            <b>{generatelink(stylesList.sort(sortStylesList))}</b>
+            <b>{generateLink(stylesList.sort(sortStylesList))}</b>
             display=swap&quot; rel=&quot;stylesheet&quot;&gt;
           </pre>
         </code>
         <p className="text-sm mb-4">CSS rules to specify families</p>
         <code className="break-all">
           <pre className="whitespace-pre-wrap text-xs bg-gray-100 p-2 mb-8">
-            {generatecss(stylesList.sort(sortStylesList)).map((family) => (
+            {generateCSS(stylesList.sort(sortStylesList)).map((family) => (
               <pre className="whitespace-pre-wrap break-all" key={family}>
                 font-family: {family};
               </pre>
