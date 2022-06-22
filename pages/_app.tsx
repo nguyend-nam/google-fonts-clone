@@ -5,11 +5,44 @@ import { SideBarContextProvider } from 'context/sidebar'
 import { StylesListContextProvider } from 'context/styleslist'
 import { PreviewTextContextProvider } from 'context/previewtext'
 import { KeyWordProvider } from 'context/keyword'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+
+function useStickyStateSideBar(defaultValue: boolean, key: string) {
+  const [value, setValue] = useState(() => {
+    const stickyValue =
+      typeof window !== 'undefined' ? window.localStorage.getItem(key) : ''
+    return stickyValue && stickyValue !== 'undefined'
+      ? JSON.parse(stickyValue)
+      : defaultValue
+  })
+  useEffect(() => {
+    window.localStorage.setItem(key, JSON.stringify(value))
+  }, [key, value])
+  return [value, setValue]
+}
+function useStickyStateStylesList(defaultValue: string[], key: string) {
+  const [value, setValue] = useState(() => {
+    const stickyValue =
+      typeof window !== 'undefined' ? window.localStorage.getItem(key) : ''
+    return stickyValue && stickyValue !== 'undefined'
+      ? JSON.parse(stickyValue)
+      : defaultValue
+  })
+  useEffect(() => {
+    window.localStorage.setItem(key, JSON.stringify(value))
+  }, [key, value])
+  return [value, setValue]
+}
 
 function MyApp({ Component, pageProps }: AppProps) {
-  const [sideBar, setSideBar] = useState(false)
-  const [stylesList, setStylesList] = useState<string[]>([])
+  const [sideBar, setSideBar] = useStickyStateSideBar(
+    false,
+    'userToggleSideBar'
+  )
+  const [stylesList, setStylesList] = useStickyStateStylesList(
+    [],
+    'userSelectStyles'
+  )
   const [previewText, setPreviewText] = useState(
     'Almost before we knew it, we had left the ground.'
   )
@@ -19,11 +52,11 @@ function MyApp({ Component, pageProps }: AppProps) {
   }
   const addStyle = (newStyle: string) => {
     if (!stylesList.includes(newStyle))
-      setStylesList((stylesList) => [...stylesList, newStyle])
+      setStylesList((stylesList: string[]) => [...stylesList, newStyle])
   }
   const removeStyle = (index: number) => {
     let newArr: string[] = []
-    stylesList.forEach((style, styleId) => {
+    stylesList.forEach((style: string, styleId: number) => {
       if (styleId !== index) newArr.push(style)
     })
     setStylesList(newArr)
@@ -32,7 +65,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <>
       <Head>
-        <title>Google Fonts Clone</title>
+        <title>NextJS Google Fonts</title>
       </Head>
       <StylesListContextProvider value={{ stylesList, addStyle, removeStyle }}>
         <SideBarContextProvider value={{ sideBar, toggleSideBar }}>

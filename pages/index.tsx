@@ -1,10 +1,9 @@
-import React, { useMemo, useState, useRef } from 'react'
-import type { NextPage } from 'next'
-import { DropdownButton } from '../components/DropdownButton'
-import { FontCard } from '../components/FontCard'
+import React, { useMemo, useState, useRef, useEffect } from 'react'
+import { DropdownButton } from 'components/DropdownButton'
+import { FontCard } from 'components/FontCard'
 import { useRouter } from 'next/router'
 import useFetchFonts from 'hooks/fetchFonts'
-import { Header } from '../components/Header'
+import { Header } from 'components/Header'
 import { SideBar } from 'components/SideBar'
 import { Button } from 'components/Button'
 import { useSideBarContext } from 'context/sidebar'
@@ -12,7 +11,7 @@ import { useStylesListContext } from 'context/styleslist'
 import { usePreviewTextContext } from 'context/previewtext'
 import { useKeyWordContext } from 'context/keyword'
 import { Font } from 'types/schema'
-import { FONT_SIZE } from '../constants/fontsize-options'
+import { FONT_SIZE } from 'constants/fontsize-options'
 import { CATEGORIES } from 'constants/category'
 import { LANGUAGES } from 'constants/language'
 import cx from 'classnames'
@@ -29,7 +28,7 @@ function formatText(str: string) {
   return newstr
 }
 
-const Home: NextPage = () => {
+const Home = () => {
   const { data } = useFetchFonts()
   const { sideBar, toggleSideBar } = useSideBarContext()
   const { stylesList, removeStyle } = useStylesListContext()
@@ -40,6 +39,10 @@ const Home: NextPage = () => {
     new Array(CATEGORIES.length).fill(true)
   )
   const [language, setLanguage] = useState('all-languages')
+  const [isSSR, setIsSSR] = useState(true)
+  useEffect(() => {
+    setIsSSR(false)
+  }, [])
   const handleOnChangeCheckBox = (position: number) => {
     const updatedCheckedState = cateList.map((item: boolean, index: number) =>
       index === position ? !item : item
@@ -72,164 +75,166 @@ const Home: NextPage = () => {
   const { push } = useRouter()
 
   return (
-    <div className="flex items-start">
-      <div className="grow">
-        <Header
-          sideBar={sideBar}
-          openSideBar={() => toggleSideBar(!sideBar)}
-          hasStyle={stylesList.length !== 0}
-        />
-        <div className="sticky z-10 top-0 bg-white mx-14 my-4 flex divide-x border rounded-full font-light">
-          <div className="w-1/2 lg:w-3/12 min-w-max flex items-center pl-4">
-            <label
-              htmlFor="searchInput"
-              className="text-gray-600 flex flex-col justify-center"
-            >
-              <span className="material-symbols-outlined">search</span>
-            </label>
-            <input
-              ref={searchInputRef}
-              placeholder="Search fonts"
-              autoComplete="off"
-              autoCorrect="off"
-              value={keyWord}
-              className="outline-none grow p-4 ml-1 placeholder:text-gray-500 focus:placeholder:text-blue-600"
-              onChange={({ target: { value: val } }) => setKeyWord(val)}
-            />
-            <Button
-              icon="cross"
-              onClick={() => {
-                setKeyWord('')
-                if (searchInputRef.current !== null)
-                  searchInputRef.current.value = ''
-              }}
-              className={cx(
-                'mr-1 h-9 w-9 grid items-center justify-center text-xl rounded-full bg-white text-gray-600 disabled:text-gray-400 hover:bg-gray-50 hover:text-gray-800',
-                {
-                  hidden: keyWord === '',
-                  block: keyWord !== '',
-                }
-              )}
-            />
-          </div>
-          <div className="w-1/3 grow hidden lg:flex items-center pl-2.5 pr-4">
-            <input
-              defaultValue={
-                previewText ===
-                'Almost before we knew it, we had left the ground.'
-                  ? ''
-                  : previewText
-              }
-              ref={previewInputRef}
-              placeholder={`Type Something`}
-              autoComplete="off"
-              autoCorrect="off"
-              className="grow outline-none p-4 placeholder:text-gray-500 focus:placeholder:text-blue-600"
-              onChange={({ target: { value: val } }) => setPreviewText(val)}
-            />
-          </div>
-          <div className="w-3/12 flex grow items-center pl-2.5 pr-4">
-            <DropdownButton
-              displayValue={fontSize}
-              options={FONT_SIZE}
-              optionsClick={(val: number) => setFontSize(val)}
-            />
-            <input
-              type="range"
-              min="8"
-              max="300"
-              value={fontSize}
-              id="sizeInput"
-              className="bg-gray-200 form-range h-0.5 p-0 ml-4 rounded-full grow outline-none focus:ring-0 focus:shadow-none"
-              onChange={({ target: { value: val } }) =>
-                setFontSize(parseInt(val))
-              }
-            />
-          </div>
-          <div className="p-2 flex flex-col justify-center">
-            <Button
-              icon="redo"
-              onClick={() => {
-                setKeyWord('')
-                setFontSize(40)
-                setPreviewText(
-                  'Almost before we knew it, we had left the ground.'
-                )
-                if (searchInputRef.current !== null)
-                  searchInputRef.current.value = ''
-                if (previewInputRef.current !== null)
-                  previewInputRef.current.value = ''
-              }}
-              className="h-9 w-9 grid items-center justify-center text-xl rounded-full bg-white text-gray-600 disabled:text-gray-400 hover:bg-gray-50 hover:text-gray-800"
-              disabled={isDefault}
-            />
-          </div>
-        </div>
-
-        <div className="p-2 px-14 flex items-center">
-          <h3 className="mr-4 text-blue-600">Categories</h3>
-          {CATEGORIES.map((name, index) => (
-            <div key={name} className="flex items-center mr-4">
-              <input
-                className="mr-1"
-                type="checkbox"
-                id={`checkbox-${name}`}
-                name={name}
-                value={name}
-                checked={cateList[index]}
-                onChange={() => handleOnChangeCheckBox(index)}
-              />
-              <label htmlFor={`checkbox-${name}`}>{formatText(name)}</label>
-            </div>
-          ))}
-        </div>
-
-        <div className="p-2 pb-10 px-14 flex items-center">
-          <h3 className="mr-4 text-blue-600">Languages</h3>
-          <select
-            className="rounded-full border p-2 w-36 text-sm hover:bg-gray-50 hover:text-blue-600"
-            defaultValue={language}
-            onChange={({ target: { value: val } }) => setLanguage(val)}
-          >
-            {LANGUAGES.map((name) => (
-              <option
-                key={name}
-                className="flex items-center mr-4"
-                id={`checkbox-${name}`}
-                value={name}
+    !isSSR && (
+      <div className="flex items-start">
+        <div className="grow">
+          <Header
+            sideBar={sideBar}
+            openSideBar={() => toggleSideBar(!sideBar)}
+            hasStyle={stylesList.length !== 0}
+          />
+          <div className="sticky z-10 top-0 bg-white mx-14 my-4 flex divide-x border rounded-full font-light">
+            <div className="w-1/2 lg:w-3/12 min-w-max flex items-center pl-4">
+              <label
+                htmlFor="searchInput"
+                className="text-gray-600 flex flex-col justify-center"
               >
-                {formatText(name)}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div className="px-14 mb-2 text-xs text-gray-500">
-          {renderFontCard.length} families
-        </div>
-
-        <div className="px-14 mx-auto grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {renderFontCard.map((font) => (
-            <div key={font.family}>
-              <FontCard
-                key={font.family}
-                data={font}
-                previewText={previewText}
-                fontSize={fontSize}
-                onClick={(font) => {
-                  push(`/specimen/${font.family}`)
+                <span className="material-symbols-outlined">search</span>
+              </label>
+              <input
+                ref={searchInputRef}
+                placeholder="Search fonts"
+                autoComplete="off"
+                autoCorrect="off"
+                value={keyWord}
+                className="outline-none grow p-4 ml-1 placeholder:text-gray-500 focus:placeholder:text-blue-600"
+                onChange={({ target: { value: val } }) => setKeyWord(val)}
+              />
+              <Button
+                icon="cross"
+                onClick={() => {
+                  setKeyWord('')
+                  if (searchInputRef.current !== null)
+                    searchInputRef.current.value = ''
                 }}
+                className={cx(
+                  'mr-1 h-9 w-9 grid items-center justify-center text-xl rounded-full bg-white text-gray-600 disabled:text-gray-400 hover:bg-gray-50 hover:text-gray-800',
+                  {
+                    hidden: keyWord === '',
+                    block: keyWord !== '',
+                  }
+                )}
               />
             </div>
-          ))}
+            <div className="w-1/3 grow hidden lg:flex items-center pl-2.5 pr-4">
+              <input
+                defaultValue={
+                  previewText ===
+                  'Almost before we knew it, we had left the ground.'
+                    ? ''
+                    : previewText
+                }
+                ref={previewInputRef}
+                placeholder={`Type Something`}
+                autoComplete="off"
+                autoCorrect="off"
+                className="grow outline-none p-4 placeholder:text-gray-500 focus:placeholder:text-blue-600"
+                onChange={({ target: { value: val } }) => setPreviewText(val)}
+              />
+            </div>
+            <div className="w-3/12 flex grow items-center pl-2.5 pr-4">
+              <DropdownButton
+                displayValue={fontSize}
+                options={FONT_SIZE}
+                optionsClick={(val: number) => setFontSize(val)}
+              />
+              <input
+                type="range"
+                min="8"
+                max="300"
+                value={fontSize}
+                id="sizeInput"
+                className="bg-gray-200 form-range h-0.5 p-0 ml-4 rounded-full grow outline-none focus:ring-0 focus:shadow-none"
+                onChange={({ target: { value: val } }) =>
+                  setFontSize(parseInt(val))
+                }
+              />
+            </div>
+            <div className="p-2 flex flex-col justify-center">
+              <Button
+                icon="redo"
+                onClick={() => {
+                  setKeyWord('')
+                  setFontSize(40)
+                  setPreviewText(
+                    'Almost before we knew it, we had left the ground.'
+                  )
+                  if (searchInputRef.current !== null)
+                    searchInputRef.current.value = ''
+                  if (previewInputRef.current !== null)
+                    previewInputRef.current.value = ''
+                }}
+                className="h-9 w-9 grid items-center justify-center text-xl rounded-full bg-white text-gray-600 disabled:text-gray-400 hover:bg-gray-50 hover:text-gray-800"
+                disabled={isDefault}
+              />
+            </div>
+          </div>
+
+          <div className="p-2 px-14 flex items-center">
+            <h3 className="mr-4 text-blue-600">Categories</h3>
+            {CATEGORIES.map((name, index) => (
+              <div key={name} className="flex items-center mr-4">
+                <input
+                  className="mr-1"
+                  type="checkbox"
+                  id={`checkbox-${name}`}
+                  name={name}
+                  value={name}
+                  checked={cateList[index]}
+                  onChange={() => handleOnChangeCheckBox(index)}
+                />
+                <label htmlFor={`checkbox-${name}`}>{formatText(name)}</label>
+              </div>
+            ))}
+          </div>
+
+          <div className="p-2 pb-10 px-14 flex items-center">
+            <h3 className="mr-4 text-blue-600">Languages</h3>
+            <select
+              className="rounded-full border p-2 w-36 text-sm hover:bg-gray-50 hover:text-blue-600"
+              defaultValue={language}
+              onChange={({ target: { value: val } }) => setLanguage(val)}
+            >
+              {LANGUAGES.map((name) => (
+                <option
+                  key={name}
+                  className="flex items-center mr-4"
+                  id={`checkbox-${name}`}
+                  value={name}
+                >
+                  {formatText(name)}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="px-14 mb-2 text-xs text-gray-500">
+            {renderFontCard.length} families
+          </div>
+
+          <div className="px-14 mx-auto grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {renderFontCard.map((font) => (
+              <div key={font.family}>
+                <FontCard
+                  key={font.family}
+                  data={font}
+                  previewText={previewText}
+                  fontSize={fontSize}
+                  onClick={(font) => {
+                    push(`/specimen/${font.family}`)
+                  }}
+                />
+              </div>
+            ))}
+          </div>
         </div>
+        <SideBar
+          sideBar={sideBar}
+          stylesList={stylesList}
+          handleRemoveStyle={removeStyle}
+        />
       </div>
-      <SideBar
-        sideBar={sideBar}
-        stylesList={stylesList}
-        handleRemoveStyle={removeStyle}
-      />
-    </div>
+    )
   )
 }
 
