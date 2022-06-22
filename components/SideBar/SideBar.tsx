@@ -3,6 +3,7 @@ import { sortStylesList } from 'utils/sort-styles-list'
 import { generateLink } from 'utils/generate-link'
 import { generateCSS } from 'utils/generate-css'
 import { generateVariantTitle } from 'utils/generate-variant-title'
+import { getFontFamily } from 'utils/get-font-family'
 
 interface SideBarProps {
   sideBar: boolean
@@ -38,27 +39,11 @@ export function SideBar(props: SideBarProps) {
 
           {stylesList.sort(sortStylesList).map((element, index) => {
             const isEndOfStyle = (index: number) =>
-              stylesList
-                .sort(sortStylesList)
-                [index].split(' ')
-                .slice(0, -4)
-                .join(' ') !==
-              stylesList
-                .sort(sortStylesList)
-                [index + 1].split(' ')
-                .slice(0, -4)
-                .join(' ')
+              getFontFamily(stylesList.sort(sortStylesList)[index]) !==
+              getFontFamily(stylesList.sort(sortStylesList)[index + 1])
             const isStartOfStyle = (index: number) =>
-              stylesList
-                .sort(sortStylesList)
-                [index].split(' ')
-                .slice(0, -4)
-                .join(' ') !==
-              stylesList
-                .sort(sortStylesList)
-                [index - 1].split(' ')
-                .slice(0, -4)
-                .join(' ')
+              getFontFamily(stylesList.sort(sortStylesList)[index]) !==
+              getFontFamily(stylesList.sort(sortStylesList)[index - 1])
             return (
               <button
                 key={index}

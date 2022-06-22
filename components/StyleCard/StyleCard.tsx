@@ -39,9 +39,12 @@ export function StyleCard(props: StyleProps) {
           ].join(' ')}
         </div>
         <div
-          className={cx('my-4 pr-4 overflow-auto break-all whitespace-nowrap', {
-            'opacity-0 select-none': previewText.trim() === '',
-          })}
+          className={cx(
+            'my-4 pr-4 overflow-hidden break-all whitespace-nowrap',
+            {
+              'opacity-0 select-none': previewText.trim() === '',
+            }
+          )}
           style={variant}
           onChange={onChange}
         >

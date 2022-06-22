@@ -10,10 +10,12 @@ import { Button } from 'components/Button'
 import { useSideBarContext } from 'context/sidebar'
 import { useStylesListContext } from 'context/styleslist'
 import { usePreviewTextContext } from 'context/previewtext'
+import { useKeyWordContext } from 'context/keyword'
 import { Font } from 'types/schema'
 import { FONT_SIZE } from '../constants/fontsize-options'
 import { CATEGORIES } from 'constants/category'
 import { LANGUAGES } from 'constants/language'
+import cx from 'classnames'
 
 function formatText(str: string) {
   let ans = str.replace(/-/g, ' ')
@@ -32,7 +34,7 @@ const Home: NextPage = () => {
   const { sideBar, toggleSideBar } = useSideBarContext()
   const { stylesList, removeStyle } = useStylesListContext()
   const { previewText, setPreviewText } = usePreviewTextContext()
-  const [keyWord, setKeyWord] = useState('')
+  const { keyWord, setKeyWord } = useKeyWordContext()
   const [fontSize, setFontSize] = useState(40)
   const [cateList, handleSelectCate] = useState<boolean[]>(
     new Array(CATEGORIES.length).fill(true)
@@ -78,7 +80,7 @@ const Home: NextPage = () => {
           hasStyle={stylesList.length !== 0}
         />
         <div className="sticky z-10 top-0 bg-white mx-14 my-4 flex divide-x border rounded-full font-light">
-          <div className="w-1/2 lg:w-3/12 flex items-center pl-4">
+          <div className="w-1/2 lg:w-3/12 min-w-max flex items-center pl-4">
             <label
               htmlFor="searchInput"
               className="text-gray-600 flex flex-col justify-center"
@@ -90,8 +92,24 @@ const Home: NextPage = () => {
               placeholder="Search fonts"
               autoComplete="off"
               autoCorrect="off"
+              value={keyWord}
               className="outline-none grow p-4 ml-1 placeholder:text-gray-500 focus:placeholder:text-blue-600"
               onChange={({ target: { value: val } }) => setKeyWord(val)}
+            />
+            <Button
+              icon="cross"
+              onClick={() => {
+                setKeyWord('')
+                if (searchInputRef.current !== null)
+                  searchInputRef.current.value = ''
+              }}
+              className={cx(
+                'mr-1 h-9 w-9 grid items-center justify-center text-xl rounded-full bg-white text-gray-600 disabled:text-gray-400 hover:bg-gray-50 hover:text-gray-800',
+                {
+                  hidden: keyWord === '',
+                  block: keyWord !== '',
+                }
+              )}
             />
           </div>
           <div className="w-1/3 grow hidden lg:flex items-center pl-2.5 pr-4">
@@ -142,7 +160,7 @@ const Home: NextPage = () => {
                 if (previewInputRef.current !== null)
                   previewInputRef.current.value = ''
               }}
-              className="h-8 w-8 grid items-center justify-center text-xl rounded-full bg-white text-gray-600 disabled:text-gray-400 hover:bg-gray-50 hover:text-gray-800"
+              className="h-9 w-9 grid items-center justify-center text-xl rounded-full bg-white text-gray-600 disabled:text-gray-400 hover:bg-gray-50 hover:text-gray-800"
               disabled={isDefault}
             />
           </div>
@@ -169,7 +187,7 @@ const Home: NextPage = () => {
         <div className="p-2 pb-10 px-14 flex items-center">
           <h3 className="mr-4 text-blue-600">Languages</h3>
           <select
-            className="rounded-full border p-2 w-36 text-sm hover:bg-gray-100 hover:text-blue-600"
+            className="rounded-full border p-2 w-36 text-sm hover:bg-gray-50 hover:text-blue-600"
             defaultValue={language}
             onChange={({ target: { value: val } }) => setLanguage(val)}
           >

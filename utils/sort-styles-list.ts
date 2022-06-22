@@ -1,11 +1,9 @@
+import { getFontFamily } from './get-font-family'
+
 export function sortStylesList(a: string, b: string) {
-  if (
-    a.split(' ').slice(0, -4).join(' ') > b.split(' ').slice(0, -4).join(' ')
-  ) {
+  if (getFontFamily(a) > getFontFamily(b)) {
     return 1
-  } else if (
-    a.split(' ').slice(0, -4).join(' ') < b.split(' ').slice(0, -4).join(' ')
-  ) {
+  } else if (getFontFamily(a) < getFontFamily(b)) {
     return -1
   } else {
     if (a.includes('Italic') && !b.includes('Italic')) {

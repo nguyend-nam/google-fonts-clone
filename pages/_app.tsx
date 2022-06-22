@@ -4,16 +4,19 @@ import Head from 'next/head'
 import { SideBarContextProvider } from 'context/sidebar'
 import { StylesListContextProvider } from 'context/styleslist'
 import { PreviewTextContextProvider } from 'context/previewtext'
+import { KeyWordProvider } from 'context/keyword'
 import { useState } from 'react'
 
 function MyApp({ Component, pageProps }: AppProps) {
   const [sideBar, setSideBar] = useState(false)
+  const [stylesList, setStylesList] = useState<string[]>([])
+  const [previewText, setPreviewText] = useState(
+    'Almost before we knew it, we had left the ground.'
+  )
+  const [keyWord, setKeyWord] = useState('')
   const toggleSideBar = () => {
     setSideBar(!sideBar)
   }
-
-  const [stylesList, setStylesList] = useState<string[]>([])
-
   const addStyle = (newStyle: string) => {
     if (!stylesList.includes(newStyle))
       setStylesList((stylesList) => [...stylesList, newStyle])
@@ -26,10 +29,6 @@ function MyApp({ Component, pageProps }: AppProps) {
     setStylesList(newArr)
   }
 
-  const [previewText, setPreviewText] = useState(
-    'Almost before we knew it, we had left the ground.'
-  )
-
   return (
     <>
       <Head>
@@ -38,7 +37,9 @@ function MyApp({ Component, pageProps }: AppProps) {
       <StylesListContextProvider value={{ stylesList, addStyle, removeStyle }}>
         <SideBarContextProvider value={{ sideBar, toggleSideBar }}>
           <PreviewTextContextProvider value={{ previewText, setPreviewText }}>
-            <Component {...pageProps} />
+            <KeyWordProvider value={{ keyWord, setKeyWord }}>
+              <Component {...pageProps} />
+            </KeyWordProvider>
           </PreviewTextContextProvider>
         </SideBarContextProvider>
       </StylesListContextProvider>

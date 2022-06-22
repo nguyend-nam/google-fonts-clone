@@ -16,6 +16,8 @@ export function Button(props: ButtonProps) {
         <span className="material-symbols-outlined">dashboard_customize</span>
       ) : icon == 'redo' ? (
         <span className="material-symbols-outlined">refresh</span>
+      ) : icon == 'cross' ? (
+        <span className="material-symbols-outlined">close</span>
       ) : (
         ''
       )}
