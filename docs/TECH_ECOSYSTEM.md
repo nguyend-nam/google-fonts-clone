@@ -98,6 +98,7 @@ behavior, take a look at the `lint-staged` section in `package.json`.
 
 - [Home](../README.md)
 - [Getting started](./GETTING_STARTED.md)
+- [Problem statement](./PROBLEM_STATEMENT.md)
 - [Code style](./CODE_STYLE.md)
 - [Editor](./EDITOR.md)
 - [Deployment](./DEPLOYMENT.md)

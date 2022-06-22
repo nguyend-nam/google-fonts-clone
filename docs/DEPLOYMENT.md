@@ -12,6 +12,7 @@ URL: https://nextjs-google-fonts.netlify.app/.
 
 - [Home](../README.md)
 - [Getting started](./GETTING_STARTED.md)
+- [Problem statement](./PROBLEM_STATEMENT.md)
 - [Tech ecosystem](./TECH_ECOSYSTEM.md)
 - [Code style](./CODE_STYLE.md)
 - [Editor](./EDITOR.md)

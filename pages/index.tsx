@@ -29,6 +29,8 @@ function formatText(str: string) {
 }
 
 const Home = () => {
+  const router = useRouter()
+  const query = router.query
   const { data } = useFetchFonts()
   const { sideBar, toggleSideBar } = useSideBarContext()
   const { stylesList, removeStyle } = useStylesListContext()
@@ -39,10 +41,24 @@ const Home = () => {
     new Array(CATEGORIES.length).fill(true)
   )
   const [language, setLanguage] = useState('all-languages')
+  const { push } = useRouter()
+
+  useEffect(() => {
+    if (query.subset && typeof query.subset === 'string') {
+      if (LANGUAGES.includes(query.subset)) {
+        setLanguage(query.subset)
+      } else {
+        push(`/`)
+      }
+    }
+  }, [query.subset, push])
+
   const [isSSR, setIsSSR] = useState(true)
+
   useEffect(() => {
     setIsSSR(false)
   }, [])
+
   const handleOnChangeCheckBox = (position: number) => {
     const updatedCheckedState = cateList.map((item: boolean, index: number) =>
       index === position ? !item : item
@@ -72,8 +88,6 @@ const Home = () => {
     return fontCard
   }, [data, keyWord, cateList, language])
 
-  const { push } = useRouter()
-
   return (
     !isSSR && (
       <div className="flex items-start">
@@ -93,6 +107,7 @@ const Home = () => {
               </label>
               <input
                 ref={searchInputRef}
+                id="searchInput"
                 placeholder="Search fonts"
                 autoComplete="off"
                 autoCorrect="off"
@@ -192,8 +207,17 @@ const Home = () => {
             <h3 className="mr-4 text-blue-600">Languages</h3>
             <select
               className="rounded-full border p-2 w-36 text-sm hover:bg-gray-50 hover:text-blue-600"
-              defaultValue={language}
-              onChange={({ target: { value: val } }) => setLanguage(val)}
+              value={
+                query.subset &&
+                typeof query.subset === 'string' &&
+                LANGUAGES.includes(query.subset)
+                  ? query.subset
+                  : language
+              }
+              onChange={({ target: { value: val } }) => {
+                setLanguage(val)
+                push(val === 'all-languages' ? `/` : `/?subset=${val}`)
+              }}
             >
               {LANGUAGES.map((name) => (
                 <option
