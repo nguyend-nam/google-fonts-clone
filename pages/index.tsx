@@ -291,7 +291,7 @@ const Home = () => {
               scrollToTop()
               setTimeout(() => {
                 setshowGoTop('goTopHidden')
-              })
+              }, 50)
             }}
           >
             <span className="material-symbols-outlined">arrow_upward</span>
