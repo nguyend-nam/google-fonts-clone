@@ -287,7 +287,12 @@ const Home = () => {
                 hidden: showGoTop === 'goTopHidden',
               }
             )}
-            onClick={scrollToTop}
+            onClick={() => {
+              scrollToTop()
+              setTimeout(() => {
+                setshowGoTop('goTopHidden')
+              })
+            }}
           >
             <span className="material-symbols-outlined">arrow_upward</span>
           </button>
