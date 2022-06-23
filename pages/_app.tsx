@@ -1,38 +1,13 @@
-import '../styles/globals.css'
+import { useState } from 'react'
+import 'styles/globals.css'
 import type { AppProps } from 'next/app'
 import Head from 'next/head'
 import { SideBarContextProvider } from 'context/sidebar'
 import { StylesListContextProvider } from 'context/styleslist'
 import { PreviewTextContextProvider } from 'context/previewtext'
 import { KeyWordProvider } from 'context/keyword'
-import { useState, useEffect } from 'react'
-
-function useStickyStateSideBar(defaultValue: boolean, key: string) {
-  const [value, setValue] = useState(() => {
-    const stickyValue =
-      typeof window !== 'undefined' ? window.localStorage.getItem(key) : ''
-    return stickyValue && stickyValue !== 'undefined'
-      ? JSON.parse(stickyValue)
-      : defaultValue
-  })
-  useEffect(() => {
-    window.localStorage.setItem(key, JSON.stringify(value))
-  }, [key, value])
-  return [value, setValue]
-}
-function useStickyStateStylesList(defaultValue: string[], key: string) {
-  const [value, setValue] = useState(() => {
-    const stickyValue =
-      typeof window !== 'undefined' ? window.localStorage.getItem(key) : ''
-    return stickyValue && stickyValue !== 'undefined'
-      ? JSON.parse(stickyValue)
-      : defaultValue
-  })
-  useEffect(() => {
-    window.localStorage.setItem(key, JSON.stringify(value))
-  }, [key, value])
-  return [value, setValue]
-}
+import { useStickyStateSideBar } from 'hooks/stateSideBar'
+import { useStickyStateStylesList } from 'hooks/stateStylesList'
 
 function MyApp({ Component, pageProps }: AppProps) {
   const [sideBar, setSideBar] = useStickyStateSideBar(
@@ -66,6 +41,11 @@ function MyApp({ Component, pageProps }: AppProps) {
     <>
       <Head>
         <title>NextJS Google Fonts</title>
+        <link
+          rel="icon"
+          type="image/png"
+          href="/Google-Fonts-Logo-Square.png"
+        />
       </Head>
       <StylesListContextProvider value={{ stylesList, addStyle, removeStyle }}>
         <SideBarContextProvider value={{ sideBar, toggleSideBar }}>

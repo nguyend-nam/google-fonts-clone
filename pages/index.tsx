@@ -32,20 +32,30 @@ const Home = () => {
   const router = useRouter()
   const query = router.query
   const { data } = useFetchFonts()
-  const { sideBar, toggleSideBar } = useSideBarContext()
-  const { stylesList, removeStyle } = useStylesListContext()
-  const { previewText, setPreviewText } = usePreviewTextContext()
-  const { keyWord, setKeyWord } = useKeyWordContext()
-  const [fontSize, setFontSize] = useState(40)
-  const [cateList, handleSelectCate] = useState<boolean[]>(
+  const { sideBar, toggleSideBar } = useSideBarContext() // SideBar context
+  const { stylesList, removeStyle } = useStylesListContext() // StylesList context
+  const { previewText, setPreviewText } = usePreviewTextContext() // PreviewText context
+  const { keyWord, setKeyWord } = useKeyWordContext() // keyWord context
+  const [fontSize, setFontSize] = useState(40) // fontSize state
+  const { push } = useRouter() // push route
+  const [language, setLanguage] = useState('all-languages') // language filter
+  const [cateList, handleSelectCate] = useState<boolean[]>( // category filter
     new Array(CATEGORIES.length).fill(true)
   )
-  const [language, setLanguage] = useState('all-languages')
-  const { push } = useRouter()
+  const [isSSR, setIsSSR] = useState(true)
+  const searchInputRef = useRef<HTMLInputElement>(null) // searchInput ref
+  const previewInputRef = useRef<HTMLInputElement>(null) // sreviewInput ref
+  const [scrollPosition, setSrollPosition] = useState(0) // viewport position state
+  const [showGoTop, setshowGoTop] = useState('goTopHidden') // show/hide state of To Top button
+  const topRef = useRef<HTMLDivElement>(null) // top component ref
 
+  // Handle subset URL query
   useEffect(() => {
     if (query.subset && typeof query.subset === 'string') {
-      if (LANGUAGES.includes(query.subset)) {
+      if (
+        LANGUAGES.includes(query.subset) &&
+        query.subset !== 'all-languages'
+      ) {
         setLanguage(query.subset)
       } else {
         push(`/`)
@@ -53,20 +63,38 @@ const Home = () => {
     }
   }, [query.subset, push])
 
-  const [isSSR, setIsSSR] = useState(true)
-
+  // Handle server-side rendering
   useEffect(() => {
     setIsSSR(false)
   }, [])
 
+  // Handle category filter checkboxes
   const handleOnChangeCheckBox = (position: number) => {
     const updatedCheckedState = cateList.map((item: boolean, index: number) =>
       index === position ? !item : item
     )
     handleSelectCate(updatedCheckedState)
   }
-  const searchInputRef = useRef<HTMLInputElement>(null)
-  const previewInputRef = useRef<HTMLInputElement>(null)
+
+  // Show/hide To Top button & Scroll to top behavior
+  const handleVisibleButton = () => {
+    const position = window.pageYOffset
+    setSrollPosition(position)
+
+    if (scrollPosition >= 81) {
+      return setshowGoTop('goTop')
+    } else if (scrollPosition < 81) {
+      return setshowGoTop('goTopHidden')
+    }
+  }
+  useEffect(() => {
+    window.addEventListener('scroll', handleVisibleButton)
+  })
+  const scrollToTop = () => {
+    topRef.current?.scrollIntoView()
+  }
+
+  // Default search values
   const isDefault =
     previewText === 'Almost before we knew it, we had left the ground.' &&
     fontSize === 40 &&
@@ -75,6 +103,7 @@ const Home = () => {
   if (previewText === '')
     setPreviewText('Almost before we knew it, we had left the ground.')
 
+  // Choose fonts to render base on filter
   const renderFontCard = useMemo(() => {
     const fontCard: Font[] = []
     data?.slice(0, 50).forEach((font) => {
@@ -91,7 +120,7 @@ const Home = () => {
   return (
     !isSSR && (
       <div className="flex items-start">
-        <div className="grow">
+        <div className="grow" ref={topRef}>
           <Header
             sideBar={sideBar}
             openSideBar={() => toggleSideBar(!sideBar)}
@@ -251,6 +280,17 @@ const Home = () => {
               </div>
             ))}
           </div>
+          <button
+            className={cx(
+              'sticky z-10 float-right bottom-10 mr-10 text-gray-500 bg-white rounded-full h-14 w-14 grid items-center justify-center shadow-lg',
+              {
+                hidden: showGoTop === 'goTopHidden',
+              }
+            )}
+            onClick={scrollToTop}
+          >
+            <span className="material-symbols-outlined">arrow_upward</span>
+          </button>
         </div>
         <SideBar
           sideBar={sideBar}
