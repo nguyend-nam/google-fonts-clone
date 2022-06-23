@@ -126,7 +126,7 @@ const Home = () => {
             openSideBar={() => toggleSideBar(!sideBar)}
             hasStyle={stylesList.length !== 0}
           />
-          <div className="sticky z-10 top-0 bg-white mx-14 my-4 flex divide-x border rounded-full font-light">
+          <div className="sticky z-10 top-0 bg-white mx-14 my-4 flex divide-x divide-gray-300 border border-gray-300 rounded-full font-light">
             <div className="w-1/2 lg:w-3/12 min-w-max flex items-center pl-4">
               <label
                 htmlFor="searchInput"
@@ -235,7 +235,7 @@ const Home = () => {
           <div className="p-2 pb-10 px-14 flex items-center">
             <h3 className="mr-4 text-blue-600">Languages</h3>
             <select
-              className="rounded-full border p-2 w-36 text-sm hover:bg-gray-50 hover:text-blue-600"
+              className="rounded-full border border-gray-300 p-2 w-36 text-sm hover:bg-gray-50 hover:text-blue-600"
               value={
                 query.subset &&
                 typeof query.subset === 'string' &&

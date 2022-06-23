@@ -28,7 +28,7 @@ export function SideBar(props: SideBarProps) {
         Selected families
       </h3>
       {stylesList.length !== 0 ? (
-        <div className="p-4 max-h-[40%] overflow-auto">
+        <div className="p-4 max-h-[40%] overflow-auto border-b border-gray-300">
           <h4
             className={cx('text-sm mb-5 font-semibold', {
               'text-center': stylesList.length === 0,
@@ -45,26 +45,34 @@ export function SideBar(props: SideBarProps) {
               getFontFamily(stylesList.sort(sortStylesList)[index]) !==
               getFontFamily(stylesList.sort(sortStylesList)[index - 1])
             return (
-              <button
-                key={index}
-                onClick={() => handleRemoveStyle(index)}
+              <div
+                key={element}
                 className={cx(
-                  'flex justify-between items-center text-left p-2.5 px-6 text-lg text-blue-600 w-full border-x border-gray-300 hover:text-blue-700 hover:bg-gray-50',
+                  'grid grid-cols-[minmax(0,_1fr)_36px] justify-between items-center p-2 px-5 border-x border-gray-300',
                   {
-                    'mb-1 border-b border-gray-300':
+                    'mb-2 border-b':
                       (index < stylesList.sort(sortStylesList).length - 1 &&
                         isEndOfStyle(index)) ||
                       index === stylesList.sort(sortStylesList).length - 1,
                   },
                   {
-                    'mt-1 border-t border-gray-300':
+                    'mt-2 border-t':
                       (index > 0 && isStartOfStyle(index)) || index === 0,
                   }
                 )}
               >
-                {generateVariantTitle(element)}
-                <span className="material-symbols-sharp">remove_circle</span>
-              </button>
+                <span className="text-gray-600">
+                  {generateVariantTitle(element)}
+                </span>
+                <button
+                  onClick={() => handleRemoveStyle(index)}
+                  className={cx(
+                    'grid justify-center items-center h-9 w-9 rounded-full text-md text-gray-500 hover:text-blue-700 hover:bg-gray-50'
+                  )}
+                >
+                  <span className="material-symbols-sharp">remove_circle</span>
+                </button>
+              </div>
             )
           })}
         </div>
