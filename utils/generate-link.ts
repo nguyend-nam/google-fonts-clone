@@ -14,7 +14,7 @@ export function generateLink(stylesList: string[]) {
 
     if (!italFlag || !wghtFlag)
       stylesList.forEach((style) => {
-        if (style.split(' ').join('+').includes(family)) {
+        if (style.split(' ').slice(0, -4).join('+') === family) {
           if (
             (style.includes('100') ||
               style.includes('200') ||
@@ -38,7 +38,7 @@ export function generateLink(stylesList: string[]) {
     if (italFlag && !wghtFlag) {
       ret += 'ital@'
       stylesList.forEach((style) => {
-        if (style.split(' ').join('+').includes(family)) {
+        if (style.split(' ').slice(0, -4).join('+') === family) {
           if (style.includes('Italic')) ret += '1'
           else ret += '0'
           ret += ';'
@@ -48,7 +48,7 @@ export function generateLink(stylesList: string[]) {
     } else if (!italFlag && wghtFlag) {
       ret += 'wght@'
       stylesList.forEach((style) => {
-        if (style.split(' ').join('+').includes(family)) {
+        if (style.split(' ').slice(0, -4).join('+') === family) {
           if (style.includes('100')) ret += '100'
           else if (style.includes('200')) ret += '200'
           else if (style.includes('300')) ret += '300'
@@ -65,7 +65,7 @@ export function generateLink(stylesList: string[]) {
     } else if (italFlag && wghtFlag) {
       ret += 'ital,wght@'
       stylesList.forEach((style) => {
-        if (style.split(' ').join('+').includes(family)) {
+        if (style.split(' ').slice(0, -4).join('+') === family) {
           if (style.includes('Italic')) ret += '1'
           else ret += '0'
           ret += ','
