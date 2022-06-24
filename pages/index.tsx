@@ -57,8 +57,6 @@ const Home = () => {
         query.subset !== 'all-languages'
       ) {
         setLanguage(query.subset)
-      } else {
-        push(`/`)
       }
     }
   }, [query.subset, push])
@@ -126,7 +124,15 @@ const Home = () => {
             openSideBar={() => toggleSideBar(!sideBar)}
             hasStyle={stylesList.length !== 0}
           />
-          <div className="sticky z-10 top-0 bg-white mx-4 sm:mx-14 my-4 flex divide-x divide-gray-300 border border-gray-300 rounded-full">
+          <div
+            className={cx(
+              'sticky z-10 top-0 bg-white mx-4 sm:mx-14 my-4 flex divide-x divide-gray-300 border border-gray-300 rounded-full',
+              {
+                'rounded-none mx-0 sm:mx-0 px-4 sm:px-14 shadow-md':
+                  scrollPosition >= 81,
+              }
+            )}
+          >
             <div className="w-full lg:w-3/12 min-w-max flex items-center pl-3">
               <label
                 htmlFor="searchInput"
@@ -194,7 +200,7 @@ const Home = () => {
                 }
               />
             </div>
-            <div className="p-2 flex flex-col justify-center">
+            <div className="p-2 flex items-center">
               <Button
                 icon="redo"
                 onClick={() => {
@@ -210,6 +216,23 @@ const Home = () => {
                 }}
                 className="h-9 w-9 grid items-center justify-center text-xl rounded-full bg-white text-gray-600 disabled:text-gray-400 hover:bg-gray-50 hover:text-gray-800"
                 disabled={isDefault}
+              />
+              <Button
+                icon="family"
+                onClick={() => toggleSideBar(!sideBar)}
+                className={cx(
+                  'relative h-12 w-12 ml-2 grid items-center justify-center rounded-full bg-white text-gray-600 hover:bg-gray-50 hover:text-gray-800',
+                  {
+                    hidden: scrollPosition < 81,
+                  },
+                  {
+                    'after:content-["●"] after:absolute after:top-0.5 after:right-1.5 after:text-[8px] after:text-red-600':
+                      stylesList.length !== 0,
+                  },
+                  {
+                    'text-blue-600': sideBar,
+                  }
+                )}
               />
             </div>
           </div>

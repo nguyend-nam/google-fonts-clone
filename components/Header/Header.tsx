@@ -35,7 +35,7 @@ export function Header(props: HeaderProps) {
           className={cx(
             'h-12 w-12 grid items-center justify-center text-xl rounded-full bg-white text-gray-600 hover:bg-gray-50 hover:text-gray-800',
             {
-              'after:content-["●"] after:absolute after:-top-0.5 after:right-1.5 after:text-[8px] after:text-red-600':
+              'after:content-["●"] after:absolute after:-top-1 after:right-1.5 after:text-[8px] after:text-red-600':
                 hasStyle,
             },
             { 'text-blue-600': sideBar }

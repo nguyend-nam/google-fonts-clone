@@ -6,18 +6,24 @@ import { SideBarContextProvider } from 'context/sidebar'
 import { StylesListContextProvider } from 'context/styleslist'
 import { PreviewTextContextProvider } from 'context/previewtext'
 import { KeyWordProvider } from 'context/keyword'
-import { useStickyStateSideBar } from 'hooks/stateSideBar'
 import { useStickyStateStylesList } from 'hooks/stateStylesList'
+import { useEffect } from 'react'
 
 function MyApp({ Component, pageProps }: AppProps) {
-  const [sideBar, setSideBar] = useStickyStateSideBar(
-    false,
-    'userToggleSideBar'
-  )
   const [stylesList, setStylesList] = useStickyStateStylesList(
     [],
     'userSelectStyles'
   )
+  const [sideBar, setSideBar] = useState(stylesList.length !== 0)
+  const [isAddedFirstTime, setIsAddedFirstTime] = useState(
+    stylesList.length !== 0 ? false : true
+  )
+  useEffect(() => {
+    if (stylesList.length === 1 && isAddedFirstTime) {
+      setSideBar(true)
+      setIsAddedFirstTime(false)
+    }
+  }, [stylesList, isAddedFirstTime])
   const [previewText, setPreviewText] = useState(
     'Almost before we knew it, we had left the ground.'
   )
@@ -40,7 +46,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <>
       <Head>
-        <title>NextJS Google Fonts</title>
+        <title>Browse Fonts - NextJS Google Fonts</title>
         <link
           rel="icon"
           type="image/png"
