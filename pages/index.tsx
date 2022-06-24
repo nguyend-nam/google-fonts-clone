@@ -128,7 +128,7 @@ const Home = () => {
             className={cx(
               'sticky z-10 top-0 bg-white mx-4 sm:mx-14 my-4 flex divide-x divide-gray-300 border border-gray-300 rounded-full',
               {
-                'rounded-none mx-0 sm:mx-0 px-4 sm:px-14 shadow-md box-border w-screen border-0':
+                'rounded-none mx-0 sm:mx-0 px-4 sm:px-14 shadow-md box-border w-screen sm:w-full border-0':
                   scrollPosition >= 81,
               }
             )}
