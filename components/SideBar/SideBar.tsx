@@ -1,4 +1,5 @@
 import cx from 'classnames'
+import { Button } from 'components/Button'
 import { sortStylesList } from 'utils/sort-styles-list'
 import { generateLink } from 'utils/generate-link'
 import { generateCSS } from 'utils/generate-css'
@@ -9,24 +10,32 @@ interface SideBarProps {
   sideBar: boolean
   stylesList: string[]
   handleRemoveStyle: (index: number) => void
+  openSideBar: () => void
 }
 
 export function SideBar(props: SideBarProps) {
-  const { sideBar, stylesList, handleRemoveStyle } = props
+  const { sideBar, stylesList, handleRemoveStyle, openSideBar } = props
 
   return (
     <aside
       className={cx(
-        'sticky top-0 h-screen bg-white ease-in-out duration-300 shadow-xl',
+        'z-10 fixed right-0 sm:sticky top-0 h-screen bg-white ease-in-out duration-300 shadow-xl',
         {
           'min-w-[320px] w-[320px] block': sideBar,
           'w-0 hidden': !sideBar,
         }
       )}
     >
-      <h3 className="bg-white h-[65px] sticky top-0 flex items-center px-4 border-b border-gray-300">
-        Selected families
-      </h3>
+      <div className="bg-white h-[65px] flex justify-between items-center px-4 border-b border-gray-300">
+        <h3>Selected families</h3>
+        <Button
+          icon="cross"
+          onClick={openSideBar}
+          className={cx(
+            'h-12 w-12 grid items-center justify-center text-xl rounded-full bg-white text-gray-600 hover:bg-gray-50 hover:text-gray-800'
+          )}
+        />
+      </div>
       {stylesList.length !== 0 ? (
         <div className="p-4 max-h-[40%] overflow-auto border-b border-gray-300">
           <h4

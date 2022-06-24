@@ -22,7 +22,7 @@ export function Header(props: HeaderProps) {
   }
 
   return (
-    <header className="grow p-2 px-14 border border-t-0 border-x-0 border-b-1 border-b-gray-300 flex justify-between items-center">
+    <header className="grow p-2 px-4 sm:px-14 border border-t-0 border-x-0 border-b-1 border-b-gray-300 flex justify-between items-center">
       <button
         className="flex items-center"
         onClick={() => {

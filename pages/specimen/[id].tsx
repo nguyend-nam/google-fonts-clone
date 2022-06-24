@@ -100,22 +100,22 @@ const FontDetailPage = () => {
   }
 
   return (
-    <div className="flex flex-nowrap">
-      <div className="grow">
+    <div className="flex">
+      <div className="grow min-w-full sm:min-w-min">
         <Header
           sideBar={sideBar}
           openSideBar={() => toggleSideBar(!sideBar)}
           hasStyle={stylesList.length !== 0}
         />
-        <div className="p-14 pt-8">
+        <div className="p-4 sm:p-14 pt-8">
           <div className="sticky top-0 z-10 flex justify-between py-6 bg-white">
             <h1 className="text-4xl">{fontDetails.family}</h1>
           </div>
           <section id="standard-styles">
             <div className="py-10 border-b border-gray-300">
               <h2 className="text-3xl">Styles</h2>
-              <div className="flex mt-10">
-                <div className="relative w-2/3 mr-4">
+              <div className="block sm:flex mt-10">
+                <div className="relative w-full sm:w-2/3 mr-4">
                   <input
                     type="text"
                     value={previewText}
@@ -134,7 +134,7 @@ const FontDetailPage = () => {
                     Type here to preview text
                   </label>
                 </div>
-                <div className="w-1/3 flex items-center pl-2.5 pr-4">
+                <div className="w-full sm:w-1/3 flex items-center pl-2.5 pr-4">
                   <DropdownButton
                     displayValue={fontSize}
                     options={FONT_SIZE}
@@ -188,6 +188,7 @@ const FontDetailPage = () => {
         sideBar={sideBar}
         stylesList={stylesList}
         handleRemoveStyle={removeStyle}
+        openSideBar={() => toggleSideBar(!sideBar)}
       />
     </div>
   )

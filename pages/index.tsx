@@ -119,15 +119,15 @@ const Home = () => {
 
   return (
     !isSSR && (
-      <div className="flex items-start">
+      <div className="flex">
         <div className="grow" ref={topRef}>
           <Header
             sideBar={sideBar}
             openSideBar={() => toggleSideBar(!sideBar)}
             hasStyle={stylesList.length !== 0}
           />
-          <div className="sticky z-10 top-0 bg-white mx-14 my-4 flex divide-x divide-gray-300 border border-gray-300 rounded-full font-light">
-            <div className="w-1/2 lg:w-3/12 min-w-max flex items-center pl-4">
+          <div className="sticky z-10 top-0 bg-white mx-4 sm:mx-14 my-4 flex divide-x divide-gray-300 border border-gray-300 rounded-full font-light">
+            <div className="w-full lg:w-3/12 min-w-max flex items-center pl-4">
               <label
                 htmlFor="searchInput"
                 className="text-gray-600 flex flex-col justify-center"
@@ -152,10 +152,10 @@ const Home = () => {
                     searchInputRef.current.value = ''
                 }}
                 className={cx(
-                  'mr-1 h-9 w-9 grid items-center justify-center text-xl rounded-full bg-white text-gray-600 disabled:text-gray-400 hover:bg-gray-50 hover:text-gray-800',
+                  'hidden sm:grid mr-1 h-9 w-9 items-center justify-center text-xl rounded-full bg-white text-gray-600 disabled:text-gray-400 hover:bg-gray-50 hover:text-gray-800',
                   {
-                    hidden: keyWord === '',
-                    block: keyWord !== '',
+                    'hidden sm:hidden': keyWord === '',
+                    'block sm:block': keyWord !== '',
                   }
                 )}
               />
@@ -176,7 +176,7 @@ const Home = () => {
                 onChange={({ target: { value: val } }) => setPreviewText(val)}
               />
             </div>
-            <div className="w-3/12 flex grow items-center pl-2.5 pr-4">
+            <div className="w-3/12 hidden lg:flex grow items-center pl-2.5 pr-4">
               <DropdownButton
                 displayValue={fontSize}
                 options={FONT_SIZE}
@@ -214,25 +214,32 @@ const Home = () => {
             </div>
           </div>
 
-          <div className="p-2 px-14 flex items-center">
+          <div className="p-2 px-4 sm:px-14 flex items-center w-screen sm:w-max">
             <h3 className="mr-4 text-blue-600">Categories</h3>
-            {CATEGORIES.map((name, index) => (
-              <div key={name} className="flex items-center mr-4">
-                <input
-                  className="mr-1"
-                  type="checkbox"
-                  id={`checkbox-${name}`}
-                  name={name}
-                  value={name}
-                  checked={cateList[index]}
-                  onChange={() => handleOnChangeCheckBox(index)}
-                />
-                <label htmlFor={`checkbox-${name}`}>{formatText(name)}</label>
-              </div>
-            ))}
+            <div className="flex items-center w-screen sm:w-max overflow-auto">
+              {CATEGORIES.map((name, index) => (
+                <div key={name} className="flex items-center mr-4">
+                  <input
+                    className="mr-1"
+                    type="checkbox"
+                    id={`checkbox-${name}`}
+                    name={name}
+                    value={name}
+                    checked={cateList[index]}
+                    onChange={() => handleOnChangeCheckBox(index)}
+                  />
+                  <label
+                    className="whitespace-nowrap"
+                    htmlFor={`checkbox-${name}`}
+                  >
+                    {formatText(name)}
+                  </label>
+                </div>
+              ))}
+            </div>
           </div>
 
-          <div className="p-2 pb-10 px-14 flex items-center">
+          <div className="p-2 pb-10 px-4 sm:px-14 flex items-center">
             <h3 className="mr-4 text-blue-600">Languages</h3>
             <select
               className="rounded-full border border-gray-300 p-2 w-36 text-sm hover:bg-gray-50 hover:text-blue-600"
@@ -261,11 +268,11 @@ const Home = () => {
             </select>
           </div>
 
-          <div className="px-14 mb-2 text-xs text-gray-500">
+          <div className="px-4 sm:px-14 mb-2 text-xs text-gray-500">
             {renderFontCard.length} families
           </div>
 
-          <div className="px-14 mx-auto grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="px-4 sm:px-14 mx-auto grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {renderFontCard.map((font) => (
               <div key={font.family}>
                 <FontCard
@@ -301,6 +308,7 @@ const Home = () => {
           sideBar={sideBar}
           stylesList={stylesList}
           handleRemoveStyle={removeStyle}
+          openSideBar={() => toggleSideBar(!sideBar)}
         />
       </div>
     )

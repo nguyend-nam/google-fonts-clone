@@ -57,7 +57,7 @@ export function StyleCard(props: StyleProps) {
             onClick={() => {
               removeStyle(stylesList.indexOf(stylesListElement))
             }}
-            className="flex items-center whitespace-nowrap text-blue-600 p-2 rounded-sm hover:bg-gray-50 hover:text-blue-700"
+            className="text-sm flex items-center whitespace-nowrap text-gray-600 p-2 rounded-sm hover:bg-gray-50 hover:text-blue-700"
           >
             Remove this style
             <span className="material-symbols-sharp ml-2">remove_circle</span>
@@ -67,7 +67,7 @@ export function StyleCard(props: StyleProps) {
             onClick={() => {
               addStyle(stylesListElement)
             }}
-            className="flex items-center whitespace-nowrap text-blue-600 p-2 rounded-sm hover:bg-gray-50 hover:text-blue-700"
+            className="text-sm flex items-center whitespace-nowrap text-blue-600 p-2 rounded-sm hover:bg-gray-50 hover:text-blue-700"
           >
             Select this style
             <span className="material-symbols-sharp ml-2">add_circle</span>
