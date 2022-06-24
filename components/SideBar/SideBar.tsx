@@ -27,7 +27,7 @@ export function SideBar(props: SideBarProps) {
       )}
     >
       <div className="bg-white h-[65px] flex justify-between items-center px-4 border-b border-gray-300">
-        <h3>Selected families</h3>
+        <h3 className="font-semibold text-gray-700">Selected families</h3>
         <Button
           icon="cross"
           onClick={openSideBar}
@@ -39,7 +39,7 @@ export function SideBar(props: SideBarProps) {
       {stylesList.length !== 0 ? (
         <div className="p-4 max-h-[40%] overflow-auto border-b border-gray-300">
           <h4
-            className={cx('text-sm mb-5 font-semibold', {
+            className={cx('text-sm mb-5 font-semibold text-gray-700', {
               'text-center': stylesList.length === 0,
             })}
           >
@@ -97,7 +97,9 @@ export function SideBar(props: SideBarProps) {
           hidden: stylesList.sort(sortStylesList).length === 0,
         })}
       >
-        <h4 className="text-sm mb-5 font-semibold">Use on the web</h4>
+        <h4 className="text-sm mb-5 font-semibold text-gray-700">
+          Use on the web
+        </h4>
         <p className="text-sm mb-4">
           To embed a font, copy the code into the{' '}
           <code className="text-xs">&lt;head&gt;</code> of your html

@@ -126,13 +126,13 @@ const Home = () => {
             openSideBar={() => toggleSideBar(!sideBar)}
             hasStyle={stylesList.length !== 0}
           />
-          <div className="sticky z-10 top-0 bg-white mx-4 sm:mx-14 my-4 flex divide-x divide-gray-300 border border-gray-300 rounded-full font-light">
-            <div className="w-full lg:w-3/12 min-w-max flex items-center pl-4">
+          <div className="sticky z-10 top-0 bg-white mx-4 sm:mx-14 my-4 flex divide-x divide-gray-300 border border-gray-300 rounded-full">
+            <div className="w-full lg:w-3/12 min-w-max flex items-center pl-3">
               <label
                 htmlFor="searchInput"
                 className="text-gray-600 flex flex-col justify-center"
               >
-                <span className="material-symbols-outlined">search</span>
+                <span className="material-symbols-sharp">search</span>
               </label>
               <input
                 ref={searchInputRef}
@@ -141,7 +141,7 @@ const Home = () => {
                 autoComplete="off"
                 autoCorrect="off"
                 value={keyWord}
-                className="outline-none grow p-4 ml-1 placeholder:text-gray-500 focus:placeholder:text-blue-600"
+                className="outline-none grow p-4 placeholder:text-gray-500 focus:placeholder:text-blue-600 font-light"
                 onChange={({ target: { value: val } }) => setKeyWord(val)}
               />
               <Button
@@ -160,7 +160,7 @@ const Home = () => {
                 )}
               />
             </div>
-            <div className="w-1/3 grow hidden lg:flex items-center pl-2.5 pr-4">
+            <div className="w-1/3 grow hidden lg:flex items-center">
               <input
                 defaultValue={
                   previewText ===
@@ -172,11 +172,11 @@ const Home = () => {
                 placeholder={`Type Something`}
                 autoComplete="off"
                 autoCorrect="off"
-                className="grow outline-none p-4 placeholder:text-gray-500 focus:placeholder:text-blue-600"
+                className="grow outline-none p-4 placeholder:text-gray-500 focus:placeholder:text-blue-600 font-light"
                 onChange={({ target: { value: val } }) => setPreviewText(val)}
               />
             </div>
-            <div className="w-3/12 hidden lg:flex grow items-center pl-2.5 pr-4">
+            <div className="w-3/12 hidden lg:flex grow items-center px-2.5">
               <DropdownButton
                 displayValue={fontSize}
                 options={FONT_SIZE}
@@ -188,7 +188,7 @@ const Home = () => {
                 max="300"
                 value={fontSize}
                 id="sizeInput"
-                className="bg-gray-200 form-range h-0.5 p-0 ml-4 rounded-full grow outline-none focus:ring-0 focus:shadow-none"
+                className="bg-gray-200 form-range h-0.5 mx-4 rounded-full grow outline-none focus:ring-0 focus:shadow-none"
                 onChange={({ target: { value: val } }) =>
                   setFontSize(parseInt(val))
                 }
@@ -216,7 +216,7 @@ const Home = () => {
 
           <div className="p-2 px-4 sm:px-14 flex items-center w-screen sm:w-max">
             <h3 className="mr-4 text-blue-600">Categories</h3>
-            <div className="flex items-center w-screen sm:w-max overflow-auto">
+            <div className="flex items-center w-screen sm:w-max overflow-auto font-light">
               {CATEGORIES.map((name, index) => (
                 <div key={name} className="flex items-center mr-4">
                   <input
@@ -239,7 +239,7 @@ const Home = () => {
             </div>
           </div>
 
-          <div className="p-2 pb-10 px-4 sm:px-14 flex items-center">
+          <div className="p-2 pb-12 px-4 sm:px-14 flex items-center">
             <h3 className="mr-4 text-blue-600">Languages</h3>
             <select
               className="rounded-full border border-gray-300 p-2 w-36 text-sm hover:bg-gray-50 hover:text-blue-600"
@@ -258,7 +258,7 @@ const Home = () => {
               {LANGUAGES.map((name) => (
                 <option
                   key={name}
-                  className="flex items-center mr-4"
+                  className="flex items-center mr-4 font-light"
                   id={`checkbox-${name}`}
                   value={name}
                 >
@@ -268,8 +268,8 @@ const Home = () => {
             </select>
           </div>
 
-          <div className="px-4 sm:px-14 mb-2 text-xs text-gray-500">
-            {renderFontCard.length} families
+          <div className="px-4 sm:px-14 mb-4 text-xs text-gray-500">
+            {renderFontCard.length} of 50 families
           </div>
 
           <div className="px-4 sm:px-14 mx-auto grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -289,7 +289,7 @@ const Home = () => {
           </div>
           <button
             className={cx(
-              'sticky z-10 float-right bottom-10 mr-10 text-gray-500 bg-white rounded-full h-14 w-14 grid items-center justify-center shadow-lg',
+              'sticky z-10 float-right bottom-10 mr-10 text-gray-500 bg-white rounded-full h-14 w-14 grid items-center justify-center drop-shadow-md',
               {
                 hidden: showGoTop === 'goTopHidden',
               }

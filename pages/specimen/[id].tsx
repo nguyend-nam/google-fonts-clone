@@ -146,7 +146,7 @@ const FontDetailPage = () => {
                     max="300"
                     value={fontSize}
                     id="sizeInput"
-                    className="bg-gray-200 form-range h-0.5 p-0 ml-4 rounded-full grow outline-none focus:ring-0 focus:shadow-none"
+                    className="bg-gray-200 form-range h-0.5 ml-4 rounded-full grow outline-none focus:ring-0 focus:shadow-none"
                     onChange={({ target: { value: val } }) =>
                       setFontSize(parseInt(val))
                     }

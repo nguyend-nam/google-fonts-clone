@@ -19,7 +19,7 @@ export const DropdownButton = (props: DropdownProps) => {
           toggleDropdown(!dropdownContent)
         }}
         className={cx(
-          'p-2 w-20 flex justify-between items-center rounded-md hover:bg-blue-50 hover:text-blue-600',
+          'p-2 pr-0 text-sm flex justify-between items-center rounded-md hover:bg-blue-50 hover:text-blue-600',
           {
             'bg-blue-50 text-blue-600': dropdownContent,
             'bg-white text-gray-700': !dropdownContent,
@@ -28,7 +28,7 @@ export const DropdownButton = (props: DropdownProps) => {
         )}
       >
         <span>{displayValue}px</span>
-        <span className="material-symbols-outlined">
+        <span className="material-symbols-outlined text-blue-600">
           {dropdownContent ? 'arrow_drop_up' : 'arrow_drop_down'}
         </span>
       </button>
