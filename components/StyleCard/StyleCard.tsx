@@ -26,9 +26,9 @@ export function StyleCard(props: StyleProps) {
   return (
     <div
       key={variant.fontFamily}
-      className="grid grid-cols-[minmax(0,_1fr)_190px] auto-cols-auto p-4 border-b border-gray-300"
+      className="grid grid-cols-[minmax(0,_1fr)_180px] auto-cols-auto p-4 border-b border-gray-300"
     >
-      <div>
+      <div className="relative after:absolute after:w-20 after:h-full after:top-0 after:right-0 after:bg-gradient-to-l after:from-white">
         <div className="text-sm text-gray-600">
           {[
             getFontWeight(variant.fontWeight),

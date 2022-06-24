@@ -14,7 +14,7 @@ export function Header(props: HeaderProps) {
   const { sideBar, openSideBar, hasStyle } = props
   const logoStyle = {
     fontFamily: 'Futura',
-    fontWeight: 100,
+    fontWeight: 400,
   }
   const fontsStyle = {
     fontFamily: 'Avenir',
