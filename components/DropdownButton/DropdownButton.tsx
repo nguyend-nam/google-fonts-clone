@@ -34,7 +34,7 @@ export const DropdownButton = (props: DropdownProps) => {
       </button>
       <div
         className={cx(
-          'shadow-lg border border-gray-100 mt-1 rounded-xl bg-white h-40 w-20 overflow-auto absolute',
+          'z-20 shadow-lg border border-gray-100 mt-1 rounded-xl bg-white h-40 w-20 overflow-auto absolute',
           {
             block: dropdownContent,
             hidden: !dropdownContent,

@@ -19,7 +19,7 @@ export function SideBar(props: SideBarProps) {
   return (
     <aside
       className={cx(
-        'z-10 fixed right-0 sm:sticky top-0 h-screen bg-white ease-in-out duration-300 shadow-xl',
+        'z-50 fixed right-0 sm:sticky top-0 h-screen bg-white ease-in-out duration-300 shadow-xl',
         {
           'min-w-[320px] w-[320px] block': sideBar,
           'w-0 hidden': !sideBar,

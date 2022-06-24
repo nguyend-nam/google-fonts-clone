@@ -108,7 +108,7 @@ const FontDetailPage = () => {
           hasStyle={stylesList.length !== 0}
         />
         <div className="p-4 sm:p-14 pt-8">
-          <div className="sticky top-0 z-10 flex justify-between py-6 bg-white">
+          <div className="sticky top-0 z-30 flex justify-between py-6 bg-white">
             <h1 className="text-4xl">{fontDetails.family}</h1>
           </div>
           <section id="standard-styles">
@@ -134,7 +134,7 @@ const FontDetailPage = () => {
                     Type here to preview text
                   </label>
                 </div>
-                <div className="w-full sm:w-1/3 flex items-center pl-2.5 pr-4">
+                <div className="w-full sm:w-1/3 mt-4 sm:mt-0 flex items-center pl-2.5 pr-4">
                   <DropdownButton
                     displayValue={fontSize}
                     options={FONT_SIZE}
