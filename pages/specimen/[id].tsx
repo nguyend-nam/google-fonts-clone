@@ -14,22 +14,29 @@ import { getFontWeight } from 'utils/get-font-weight'
 import Head from 'next/head'
 
 function fontDataToCSS(data: Font) {
-  const { subsets, family, variants, files } = data
-  const weight = variants.includes('regular') ? 'regular' : variants[0]
-  const url = files[weight]
-  const surl = url.slice(0, 4) + 's' + url.slice(4)
+  const fontFacesList: string[] = []
 
-  return `
-  @font-face {
-    font-family: '${family} script=${
-    subsets.includes('latin') ? 'latin' : subsets[0]
-  } rev=1';
-    font-style: normal;
-    font-weight: ${weight};
-    font-display: block;
-    src: url(${surl}) format('woff2');
-  }
-  `
+  const { subsets, family, variants, files } = data
+
+  variants.map((variant, index) => {
+    const weight = variants[index] === 'regular' ? '400' : variants[index]
+    const url = files[variant]
+    const surl = url.slice(0, 4) + 's' + url.slice(4)
+
+    fontFacesList.push(`
+      @font-face {
+        font-family: '${family} script=${
+      subsets.includes('latin') ? 'latin' : subsets[0]
+    } rev=1';
+        font-style: ${weight.includes('italic') ? 'italic' : 'normal'};
+        font-weight: ${weight.includes('italic') ? weight.slice(0, 3) : weight};
+        font-display: block;
+        src: url(${surl}) format('woff2');
+      }
+    `)
+  })
+
+  return fontFacesList
 }
 
 const FontDetailPage = () => {
@@ -45,14 +52,6 @@ const FontDetailPage = () => {
     return <div>Loading...</div>
   }
 
-  const style = document.createElement('style')
-  style.id = `google-font-${fontDetails.family
-    .replace(/\s+/g, '-')
-    .toLowerCase()}`
-  style.innerHTML = fontDataToCSS(fontDetails)
-
-  document.head.appendChild(style)
-
   const onChangePreviewText = (val: string) => {
     if (val === '')
       setPreviewText('Almost before we knew it, we had left the ground.')
@@ -60,6 +59,16 @@ const FontDetailPage = () => {
   }
 
   let variantStyles = []
+  const fontFaces = fontDataToCSS(fontDetails)
+  fontFaces.map((fontFace) => {
+    const style = document.createElement('style')
+    style.id = `google-font-${fontDetails.family
+      .replace(/\s+/g, '-')
+      .toLowerCase()}`
+    style.innerHTML = fontFace
+
+    document.head.appendChild(style)
+  })
 
   const { subsets, family } = fontDetails
   for (let i = 0; i < fontDetails.variants.length; i++) {
