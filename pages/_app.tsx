@@ -5,7 +5,8 @@ import Head from 'next/head'
 import { SideBarContextProvider } from 'context/sidebar'
 import { StylesListContextProvider } from 'context/styleslist'
 import { PreviewTextContextProvider } from 'context/previewtext'
-import { KeyWordProvider } from 'context/keyword'
+import { KeyWordContextProvider } from 'context/keyword'
+import { FontSizeContextProvider } from 'context/fontsize'
 import { useStickyStateStylesList } from 'hooks/stateStylesList'
 import { useEffect } from 'react'
 
@@ -14,6 +15,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     [],
     'userSelectStyles'
   )
+  const [fontSize, setFontSize] = useState(40)
   const [sideBar, setSideBar] = useState(stylesList.length !== 0)
   const [isAddedFirstTime, setIsAddedFirstTime] = useState(
     stylesList.length !== 0 ? false : true
@@ -55,11 +57,13 @@ function MyApp({ Component, pageProps }: AppProps) {
       </Head>
       <StylesListContextProvider value={{ stylesList, addStyle, removeStyle }}>
         <SideBarContextProvider value={{ sideBar, toggleSideBar }}>
-          <PreviewTextContextProvider value={{ previewText, setPreviewText }}>
-            <KeyWordProvider value={{ keyWord, setKeyWord }}>
-              <Component {...pageProps} />
-            </KeyWordProvider>
-          </PreviewTextContextProvider>
+          <FontSizeContextProvider value={{ fontSize, setFontSize }}>
+            <PreviewTextContextProvider value={{ previewText, setPreviewText }}>
+              <KeyWordContextProvider value={{ keyWord, setKeyWord }}>
+                <Component {...pageProps} />
+              </KeyWordContextProvider>
+            </PreviewTextContextProvider>
+          </FontSizeContextProvider>
         </SideBarContextProvider>
       </StylesListContextProvider>
     </>

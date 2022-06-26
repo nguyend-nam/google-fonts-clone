@@ -10,6 +10,7 @@ import { useSideBarContext } from 'context/sidebar'
 import { useStylesListContext } from 'context/styleslist'
 import { usePreviewTextContext } from 'context/previewtext'
 import { useKeyWordContext } from 'context/keyword'
+import { useFontSizeContext } from 'context/fontsize'
 import { Font } from 'types/schema'
 import { FONT_SIZE } from 'constants/fontsize-options'
 import { CATEGORIES } from 'constants/category'
@@ -36,7 +37,7 @@ const Home = () => {
   const { stylesList, removeStyle } = useStylesListContext() // StylesList context
   const { previewText, setPreviewText } = usePreviewTextContext() // PreviewText context
   const { keyWord, setKeyWord } = useKeyWordContext() // keyWord context
-  const [fontSize, setFontSize] = useState(40) // fontSize state
+  const { fontSize, setFontSize } = useFontSizeContext() // fontSize state
   const { push } = useRouter() // push route
   const [language, setLanguage] = useState('all-languages') // language filter
   const [cateList, handleSelectCate] = useState<boolean[]>( // category filter
