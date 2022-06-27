@@ -4,7 +4,7 @@ export function useStickyStateStylesList(defaultValue: string[], key: string) {
   const [value, setValue] = useState(() => {
     const stickyValue =
       typeof window !== 'undefined' ? window.localStorage.getItem(key) : ''
-    return stickyValue && stickyValue !== 'undefined'
+    return stickyValue && stickyValue !== undefined
       ? JSON.parse(stickyValue)
       : defaultValue
   })

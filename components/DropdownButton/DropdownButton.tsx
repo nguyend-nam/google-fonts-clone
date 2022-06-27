@@ -47,7 +47,7 @@ export const DropdownButton = (props: DropdownProps) => {
             key={index}
             onClick={() => {
               optionsClick(option)
-              toggleDropdown(!dropdownContent)
+              toggleDropdown(false)
             }}
           >
             {option}
