@@ -1,8 +1,10 @@
 import cx from 'classnames'
 import { useStylesListContext } from 'context/styleslist'
 import { getFontWeight } from 'utils/get-font-weight'
+import { useEffect } from 'react'
 
 interface StyleProps {
+  style: string
   variant: variant
   previewText: string
   fontSize: number
@@ -20,9 +22,27 @@ type variant = {
 }
 
 export function StyleCard(props: StyleProps) {
-  const { variant, previewText, stylesListElement, onChange } = props
+  const { style, variant, previewText, stylesListElement, onChange } = props
   const { stylesList, addStyle, removeStyle } = useStylesListContext()
   const isAdded = stylesList.includes(stylesListElement)
+
+  useEffect(() => {
+    const style1 = document.createElement('style')
+    style1.id = `google-font-${variant.fontFamily
+      .split(' ')
+      .slice(0, -2)
+      .join(' ')
+      .slice(1)
+      .replace(/\s+/g, '-')
+      .toLowerCase()}`
+    style1.innerHTML = style
+
+    document.head.appendChild(style1)
+    return () => {
+      document.head.removeChild(style1)
+    }
+  }, [style, variant.fontFamily])
+
   return (
     <div
       key={variant.fontFamily}

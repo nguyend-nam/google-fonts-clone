@@ -17,6 +17,13 @@ function MyApp({ Component, pageProps }: AppProps) {
   )
   const [fontSize, setFontSize] = useState(40)
   const [sideBar, setSideBar] = useState(stylesList.length !== 0)
+  const [previewText, setPreviewText] = useState(
+    'Almost before we knew it, we had left the ground.'
+  )
+  const [keyWord, setKeyWord] = useState('')
+  const toggleSideBar = () => {
+    setSideBar(!sideBar)
+  }
   const [isAddedFirstTime, setIsAddedFirstTime] = useState(
     stylesList.length !== 0 ? false : true
   )
@@ -26,13 +33,6 @@ function MyApp({ Component, pageProps }: AppProps) {
       setIsAddedFirstTime(false)
     }
   }, [stylesList, isAddedFirstTime])
-  const [previewText, setPreviewText] = useState(
-    'Almost before we knew it, we had left the ground.'
-  )
-  const [keyWord, setKeyWord] = useState('')
-  const toggleSideBar = () => {
-    setSideBar(!sideBar)
-  }
   const addStyle = (newStyle: string) => {
     if (!stylesList.includes(newStyle))
       setStylesList((stylesList: string[]) => [...stylesList, newStyle])

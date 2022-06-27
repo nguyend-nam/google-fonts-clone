@@ -60,15 +60,6 @@ const FontDetailPage = () => {
 
   let variantStyles = []
   const fontFaces = fontDataToCSS(fontDetails)
-  fontFaces.map((fontFace) => {
-    const style = document.createElement('style')
-    style.id = `google-font-${fontDetails.family
-      .replace(/\s+/g, '-')
-      .toLowerCase()}`
-    style.innerHTML = fontFace
-
-    document.head.appendChild(style)
-  })
 
   const { subsets, family } = fontDetails
   for (let i = 0; i < fontDetails.variants.length; i++) {
@@ -169,8 +160,9 @@ const FontDetailPage = () => {
                 </div>
               </div>
               <div>
-                {variantStyles.map((variant) => (
+                {variantStyles.map((variant, index) => (
                   <StyleCard
+                    style={fontFaces[index]}
                     key={
                       variant.fontFamily +
                       variant.fontStyle +
