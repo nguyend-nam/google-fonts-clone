@@ -5,6 +5,7 @@ import { Font } from 'types/schema'
 interface CardProps {
   data: Font
   onClick?: (font: Font) => void
+  previewText: string
   fontSize?: number
 }
 
@@ -12,6 +13,7 @@ function fontDataToCSS(data: Font) {
   const { subsets, family, variants, files } = data
   const weight = variants.includes('regular') ? 'regular' : variants[0]
   const url = files[weight]
+  const surl = url.slice(0, 4) + 's' + url.slice(4)
 
   return `
   @font-face {
@@ -21,7 +23,7 @@ function fontDataToCSS(data: Font) {
     font-style: normal;
     font-weight: ${weight};
     font-display: block;
-    src: url(${url}) format('woff2');
+    src: url(${surl}) format('woff2');
   }
   `
 }
@@ -46,7 +48,7 @@ function fontDataToInlineStyle(data: Font, fontSize: number) {
 }
 
 export function FontCard(props: CardProps) {
-  const { data, onClick, fontSize = 40 } = props
+  const { data, onClick, previewText, fontSize = 40 } = props
   const fontRef = useRef<HTMLDivElement>(null)
   const variantLen = data.variants.length
 
@@ -73,7 +75,9 @@ export function FontCard(props: CardProps) {
 
   return (
     <div
-      className={cx('border rounded p-4')}
+      className={cx(
+        'border border-gray-300 rounded-lg p-4 h-full min-h-[270px] ease-in-out duration-150 hover:-translate-y-0.5 hover:shadow-md'
+      )}
       tabIndex={1}
       role="button"
       onClick={() => {
@@ -95,8 +99,8 @@ export function FontCard(props: CardProps) {
         </span>
       </div>
 
-      <div className="mb-17" ref={fontRef}>
-        Almost before we knew it, we had left the ground.
+      <div className="mb-17 break-words" ref={fontRef}>
+        {previewText}
       </div>
     </div>
   )
