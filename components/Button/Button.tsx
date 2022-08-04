@@ -1,31 +1,25 @@
-import { faSun } from '@fortawesome/free-solid-svg-icons'
-import { faMicrosoft } from '@fortawesome/free-brands-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import cx from 'classnames'
 
 interface ButtonProps {
   icon?: string
   className?: string
   onClick?: () => void
+  disabled?: boolean
 }
 
 export function Button(props: ButtonProps) {
-  const { icon, className, onClick } = props
+  const { icon, className, onClick, disabled } = props
 
   return (
-    <button
-      onClick={onClick}
-      className={cx(
-        'h-12 w-12 text-xl rounded-full bg-white text-gray-500 hover:bg-gray-50 hover:text-gray-800',
-        className
-      )}
-    >
-      {icon === 'theme' ? (
-        <FontAwesomeIcon icon={faSun} />
-      ) : icon === 'family' ? (
-        <FontAwesomeIcon icon={faMicrosoft} />
+    <button onClick={onClick} className={cx(className)} disabled={disabled}>
+      {icon === 'family' ? (
+        <span className="material-symbols-outlined">dashboard_customize</span>
+      ) : icon == 'redo' ? (
+        <span className="material-symbols-sharp">refresh</span>
+      ) : icon == 'cross' ? (
+        <span className="material-symbols-sharp">close</span>
       ) : (
-        'Button'
+        ''
       )}
     </button>
   )

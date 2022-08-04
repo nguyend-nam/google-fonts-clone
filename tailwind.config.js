@@ -6,12 +6,12 @@ module.exports = {
   ],
   theme: {
     extend: {
-      rotate: {
-        22.5: '22.5deg',
-      },
       colors: {
         blue: {
           600: '#1a73e8',
+        },
+        gray: {
+          300: '#dadce0',
         },
       },
       spacing: {
