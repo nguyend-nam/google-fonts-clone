@@ -12,8 +12,8 @@ interface CardProps {
 function fontDataToCSS(data: Font) {
   const { subsets, family, variants, files } = data
   const weight = variants.includes('regular') ? 'regular' : variants[0]
-  const url = files[weight]
-  const surl = url.slice(0, 4) + 's' + url.slice(4)
+  const surl = files[weight]
+  // const surl = url.slice(0, 4) + 's' + url.slice(4)
 
   return `
   @font-face {
