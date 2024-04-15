@@ -20,8 +20,8 @@ function fontDataToCSS(data: Font) {
 
   variants.map((variant, index) => {
     const weight = variants[index] === 'regular' ? '400' : variants[index]
-    const url = files[variant]
-    const surl = url.slice(0, 4) + 's' + url.slice(4)
+    const surl = files[variant]
+    // const surl = url.slice(0, 4) + 's' + url.slice(4)
 
     fontFacesList.push(`
       @font-face {
